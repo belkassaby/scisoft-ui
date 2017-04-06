@@ -57,16 +57,24 @@ public class PlottingGUIUpdate extends AbstractPlotConnection {
 					plottingSystem.clearRegions();
 				}
 
-				final IROI roi = (IROI) guiBean.get(GuiParameters.ROIDATA);
+				String rName = (String) guiBean.get(GuiParameters.ROIDATA);
 				IROI croi = manager.getROI();
 				ROIList<? extends IROI> list = (ROIList<?>) guiBean.get(GuiParameters.ROIDATALIST);
 
-				if (roi != null)
-					logger.trace("R: {}", roi.getName());
-				if (list != null) {
-					for (IROI r : list)
-						logger.trace("L: {}", r.getName());
+				IROI roi = null;
+				if (rName != null) {
+					logger.trace("R: {}", rName);
+					if (list != null) {
+						for (IROI r : list) {
+							logger.trace("L: {}", r.getName());
+							if (r.getName().equals(rName)) {
+								roi = r;
+								break;
+							}
+						}
+					}
 				}
+
 				// Same as in SidePlotProfile with onSwitch = false, i.e.:
 				// logic is for each GUI parameter
 				//     if null and parameter exists
@@ -76,8 +84,7 @@ public class PlottingGUIUpdate extends AbstractPlotConnection {
 				//         replace parameter
 				//         signal updating of parameter
 
-				String rName = null;
-				if (roi == null) { // this indicates to remove the current ROI
+				if (rName == null) { // this indicates to remove the current ROI
 					if (croi != null) {
 						final IRegion r = plottingSystem.getRegion(croi.getName());
 						if (r != null) {
@@ -86,8 +93,7 @@ public class PlottingGUIUpdate extends AbstractPlotConnection {
 						croi = null;
 					}
 				} else {
-					rName = roi.getName(); // overwrite name if necessary
-					if (rName != null && rName.trim().length() == 0) {
+					if (rName.trim().length() == 0) {
 						rName = null;
 					}
 					boolean found = false; // found existing?
@@ -119,8 +125,8 @@ public class PlottingGUIUpdate extends AbstractPlotConnection {
 							}
 						}
 					}
-					if (!found) { // create new region
-						if (list == null) {
+					if (!found && roi != null) { // create new region
+						if (list == null) { // always false
 							list = ROIUtils.createNewROIList(roi);
 							list.add(roi);
 						} else {
