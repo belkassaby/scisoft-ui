@@ -216,10 +216,10 @@ public class ROIManager implements IROIListener, IRegionListener {
 		if (quietUpdate) {
 			bean.put(GuiParameters.QUIET_UPDATE, "");
 		}
-		ROIList<?> list = createNewROIList(clazz);
+		ROIList<?> list = buildNewROIList(clazz);
 		if (list != null && list.size() > 0) {
 			bean.put(GuiParameters.ROIDATALIST, list);
-			if (!list.contains(r)) {
+			if (r != null && !list.contains(r)) {
 				r = list.get(0);
 			}
 			if (r != null) {
@@ -247,7 +247,7 @@ public class ROIManager implements IROIListener, IRegionListener {
 		server.sendGUIInfo(bean);
 	}
 
-	private ROIList<?> createNewROIList(Class<? extends IROI> clazz) {
+	private ROIList<?> buildNewROIList(Class<? extends IROI> clazz) {
 		ROIList<? extends IROI> list = ROIUtils.createNewROIList(clazz);
 		if (list == null) {
 			return null;
