@@ -70,7 +70,7 @@ public class PlottingGUIUpdate extends AbstractPlotConnection {
 					for (IROI r : list) {
 						String n = r.getName();
 						if (n != null) {
-							n =  n.trim();
+							n = n.trim();
 							if (n.length() > 0) {
 								logger.trace("L: {}", r.getName());
 								names.add(n);
@@ -81,15 +81,6 @@ public class PlottingGUIUpdate extends AbstractPlotConnection {
 						}
 					}
 				}
-
-				// Same as in SidePlotProfile with onSwitch = false, i.e.:
-				// logic is for each GUI parameter
-				//     if null and parameter exists
-				//         delete parameter
-				//         signal updating of parameter
-				//     else if same class
-				//         replace parameter
-				//         signal updating of parameter
 
 				if (rName == null) { // this indicates to remove the current ROI
 					if (croi != null) {
@@ -118,8 +109,18 @@ public class PlottingGUIUpdate extends AbstractPlotConnection {
 				if (list != null) {
 					for (IROI r : list) {
 						String n = r.getName();
-						if (r == croi || r == roi || n.equals(rName)) {
+						if (n != null) {
+							n = n.trim();
+							if (n.length() == 0) {
+								n = null;
+							}
+						}
+						
+						if (r == croi || r == roi || (n != null && n.equals(rName))) {
 							continue; // no need to update current region
+						}
+						if (n != null && !names.remove(n)) {
+							continue;
 						}
 
 						if (regNames.contains(n)) { // update ROI
@@ -127,7 +128,7 @@ public class PlottingGUIUpdate extends AbstractPlotConnection {
 							if (region != null)
 								region.setROI(r);
 						} else { // or add new region that has not been listed
-							IRegion reg = plottingSystem.getRegion(n);
+							IRegion reg = n == null ? null : plottingSystem.getRegion(n);
 							if (reg == null) {
 								createRegion(r, guiBean);
 							} else {
@@ -139,13 +140,17 @@ public class PlottingGUIUpdate extends AbstractPlotConnection {
 				}
 
 				if (roi != null) { // create new region
-					createRegion(roi, guiBean);
+					IRegion region = plottingSystem.getRegion(rName);
+					if (region == null) {
+						createRegion(roi, guiBean);
+					} else {
+						region.setROI(roi);
+					}
 				} else if (croi != null) {
 					IRegion region = plottingSystem.getRegion(croi.getName());
 					if (region != null) {
 						region.setROI(croi);
 					}
-					
 				}
 			}
 		});
