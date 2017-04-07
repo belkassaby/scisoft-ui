@@ -213,14 +213,18 @@ public class ROIManager implements IROIListener, IRegionListener {
 		bean.remove(GuiParameters.ROICLEARALL);
 		bean.remove(GuiParameters.ROIDATALIST);
 		bean.put(GuiParameters.ROIDATA, null);
-		if (quietUpdate)
+		if (quietUpdate) {
 			bean.put(GuiParameters.QUIET_UPDATE, "");
+		}
 		ROIList<?> list = createNewROIList(clazz);
 		if (list != null && list.size() > 0) {
 			bean.put(GuiParameters.ROIDATALIST, list);
-			if (!list.contains(r))
+			if (!list.contains(r)) {
 				r = list.get(0);
-			bean.put(GuiParameters.ROIDATA, r);
+			}
+			if (r != null) {
+				bean.put(GuiParameters.ROIDATA, r.getName());
+			}
 		} else {
 			r = null;
 		}
@@ -243,7 +247,7 @@ public class ROIManager implements IROIListener, IRegionListener {
 		server.sendGUIInfo(bean);
 	}
 
-	public ROIList<?> createNewROIList(Class<? extends IROI> clazz) {
+	private ROIList<?> createNewROIList(Class<? extends IROI> clazz) {
 		ROIList<? extends IROI> list = ROIUtils.createNewROIList(clazz);
 		if (list == null) {
 			return null;
