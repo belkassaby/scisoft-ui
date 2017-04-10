@@ -14,12 +14,11 @@ import java.util.Set;
 
 import org.eclipse.dawnsci.analysis.api.roi.IROI;
 import org.eclipse.dawnsci.analysis.dataset.roi.ROIList;
-import org.eclipse.dawnsci.analysis.dataset.roi.ROIUtils;
 import org.eclipse.dawnsci.plotting.api.IPlottingSystem;
 import org.eclipse.dawnsci.plotting.api.region.IRegion;
+import org.eclipse.dawnsci.plotting.api.region.IRegion.RegionType;
 import org.eclipse.dawnsci.plotting.api.region.IRegionService;
 import org.eclipse.dawnsci.plotting.api.region.RegionUtils;
-import org.eclipse.dawnsci.plotting.api.region.IRegion.RegionType;
 import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,27 +56,33 @@ public class PlottingGUIUpdate extends AbstractPlotConnection {
 					plottingSystem.clearRegions();
 				}
 
-				final IROI roi = (IROI) guiBean.get(GuiParameters.ROIDATA);
+				String rName = (String) guiBean.get(GuiParameters.ROIDATA);
 				IROI croi = manager.getROI();
 				ROIList<? extends IROI> list = (ROIList<?>) guiBean.get(GuiParameters.ROIDATALIST);
 
-				if (roi != null)
-					logger.trace("R: {}", roi.getName());
-				if (list != null) {
-					for (IROI r : list)
-						logger.trace("L: {}", r.getName());
+				IROI roi = null;
+				final Set<String> names = new HashSet<String>(); // names of ROIs
+				if (rName != null) {
+					names.add(rName);
+					logger.trace("R: {}", rName);
 				}
-				// Same as in SidePlotProfile with onSwitch = false, i.e.:
-				// logic is for each GUI parameter
-				//     if null and parameter exists
-				//         delete parameter
-				//         signal updating of parameter
-				//     else if same class
-				//         replace parameter
-				//         signal updating of parameter
+				if (list != null) {
+					for (IROI r : list) {
+						String n = r.getName();
+						if (n != null) {
+							n = n.trim();
+							if (n.length() > 0) {
+								logger.trace("L: {}", r.getName());
+								names.add(n);
+								if (n.equals(rName) && roi == null) {
+									roi = r;
+								}
+							}
+						}
+					}
+				}
 
-				String rName = null;
-				if (roi == null) { // this indicates to remove the current ROI
+				if (rName == null) { // this indicates to remove the current ROI
 					if (croi != null) {
 						final IRegion r = plottingSystem.getRegion(croi.getName());
 						if (r != null) {
@@ -86,69 +91,8 @@ public class PlottingGUIUpdate extends AbstractPlotConnection {
 						croi = null;
 					}
 				} else {
-					rName = roi.getName(); // overwrite name if necessary
-					if (rName != null && rName.trim().length() == 0) {
+					if (rName.trim().length() == 0) {
 						rName = null;
-					}
-					boolean found = false; // found existing?
-					if (croi != null) {
-						if (roi.getClass().equals(croi.getClass())) { // replace current ROI
-							String cn = croi.getName();
-							final IRegion reg = plottingSystem.getRegion(cn);
-							if (reg != null) {
-								if (rName != null) {
-									plottingSystem.renameRegion(reg, rName);
-								} else {
-									roi.setName(cn);
-									rName = cn;
-								}
-								
-								reg.setFromServer(true);
-								if (!reg.getCoordinateSystem().isDisposed())
-									reg.setROI(roi);
-								found = true;
-							}
-						} else {
-							if (rName != null) {
-								final IRegion reg = plottingSystem.getRegion(rName);
-								if (reg != null) {
-									reg.setFromServer(true);
-									reg.setROI(roi);
-									found = true;
-								}
-							}
-						}
-					}
-					if (!found) { // create new region
-						if (list == null) {
-							list = ROIUtils.createNewROIList(roi);
-							list.add(roi);
-						} else {
-							if (list.size() > 0) {
-								if (list.get(0).getClass().equals(roi.getClass())) {
-									if (!list.contains(roi)) {
-										list.add(roi);
-									}
-								}
-							} else {
-								list.add(roi);
-							}
-						}
-						createRegion(roi, guiBean);
-						croi = roi;
-					}
-				}
-
-				final Set<String> names = new HashSet<String>(); // names of ROIs
-				if (rName != null) { // add existing ROI
-					names.add(rName);
-				}
-				if (list != null) {
-					for (IROI r : list) {
-						String n = r.getName();
-						if (n != null && n.trim().length() > 0) {
-							names.add(n);
-						}
 					}
 				}
 
@@ -165,8 +109,18 @@ public class PlottingGUIUpdate extends AbstractPlotConnection {
 				if (list != null) {
 					for (IROI r : list) {
 						String n = r.getName();
-						if (r == croi || r == roi || n.equals(rName)) {
+						if (n != null) {
+							n = n.trim();
+							if (n.length() == 0) {
+								n = null;
+							}
+						}
+						
+						if (r == croi || r == roi || (n != null && n.equals(rName))) {
 							continue; // no need to update current region
+						}
+						if (n != null && !names.remove(n)) {
+							continue;
 						}
 
 						if (regNames.contains(n)) { // update ROI
@@ -174,7 +128,7 @@ public class PlottingGUIUpdate extends AbstractPlotConnection {
 							if (region != null)
 								region.setROI(r);
 						} else { // or add new region that has not been listed
-							IRegion reg = plottingSystem.getRegion(n);
+							IRegion reg = n == null ? null : plottingSystem.getRegion(n);
 							if (reg == null) {
 								createRegion(r, guiBean);
 							} else {
@@ -182,6 +136,20 @@ public class PlottingGUIUpdate extends AbstractPlotConnection {
 								reg.setROI(r);
 							}
 						}
+					}
+				}
+
+				if (roi != null) { // create new region
+					IRegion region = plottingSystem.getRegion(rName);
+					if (region == null) {
+						createRegion(roi, guiBean);
+					} else {
+						region.setROI(roi);
+					}
+				} else if (croi != null) {
+					IRegion region = plottingSystem.getRegion(croi.getName());
+					if (region != null) {
+						region.setROI(croi);
 					}
 				}
 			}
