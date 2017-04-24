@@ -15,7 +15,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 import uk.ac.diamond.scisoft.arpes.calibration.views.ARPESFilePreview;
 import uk.ac.diamond.scisoft.arpes.calibration.wizards.GoldCalibrationWizard;
@@ -61,7 +60,7 @@ public class E4GoldCalibrationHandler {
 	private void openWizard(final Shell shell, ISelection selection) {
 		GoldCalibrationWizard wizard = new GoldCalibrationWizard();
 		if (selection instanceof IStructuredSelection) {
-			wizard.init(PlatformUI.getWorkbench(), (IStructuredSelection) selection);
+			//wizard.init(PlatformUI.getWorkbench(), (IStructuredSelection) selection);
 			WizardDialog dialog = new WizardDialog(shell, wizard);
 			dialog.create();
 			dialog.open();

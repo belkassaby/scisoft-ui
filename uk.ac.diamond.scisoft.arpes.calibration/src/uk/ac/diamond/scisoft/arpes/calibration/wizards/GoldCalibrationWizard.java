@@ -8,9 +8,7 @@
  */
 package uk.ac.diamond.scisoft.arpes.calibration.wizards;
 
-import java.io.File;
-
-import org.eclipse.core.resources.IFile;
+import org.dawnsci.datavis.api.IDataPackage;
 import org.eclipse.dawnsci.analysis.api.io.IDataHolder;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.january.dataset.IDataset;
@@ -21,7 +19,6 @@ import org.eclipse.jface.dialogs.IPageChangingListener;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.dialogs.PageChangingEvent;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -29,7 +26,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +33,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.diamond.scisoft.analysis.io.LoaderFactory;
 import uk.ac.diamond.scisoft.arpes.calibration.utils.ARPESCalibrationConstants;
 
-public class GoldCalibrationWizard extends Wizard implements INewWizard {
+public class GoldCalibrationWizard extends Wizard {
 
 	private static final Logger logger = LoggerFactory.getLogger(GoldCalibrationWizard.class);
 
@@ -99,8 +95,8 @@ public class GoldCalibrationWizard extends Wizard implements INewWizard {
 		});
 	}
 
-	@Override
-	public void init(IWorkbench workbench, IStructuredSelection selection) {
+//	@Override
+	public void init(IWorkbench workbench, IDataPackage suitableData) {
 		one = new GoldCalibrationPageOne(calibrationData);
 		two = new GoldCalibrationPageTwo(calibrationData);
 		three = new GoldCalibrationPageThree(calibrationData);
@@ -143,16 +139,7 @@ public class GoldCalibrationWizard extends Wizard implements INewWizard {
 		addPage(four);
 		addPage(five);
 
-		Object selected = selection.getFirstElement();
-		String path = "";
-		if (selected instanceof IFile) {
-			IFile ifile = (IFile) selected;
-			path = ifile.getLocation().toOSString();
-		} else if (selected instanceof File) {
-			File file = (File) selected;
-			path = file.getPath();
-		}
-		setData(path);
+		setData(suitableData.getFilePath());
 	}
 
 	private void setData(String path) {
