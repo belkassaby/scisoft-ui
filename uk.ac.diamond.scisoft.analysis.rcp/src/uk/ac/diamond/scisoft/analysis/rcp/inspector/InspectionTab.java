@@ -973,7 +973,7 @@ class PlotTab extends ATab {
 		Dataset reorderedData;
 		IMetadata meta = null;
 		try {
-			meta = dataset.getMetadata();
+			meta = dataset.getFirstMetadata(IMetadata.class);
 		} catch (Exception e1) {
 			logger.warn("Metadata cannot be retrieved from {}: {}", dataset.getName(), e1.getStackTrace());
 		}
