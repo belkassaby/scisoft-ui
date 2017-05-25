@@ -67,7 +67,7 @@ public class MetadataTool extends AbstractToolPage {
 			IDataset dataset = imageTrace.getData();
 			if (dataset != null) {
 				diffMetadataComp.setData(dataset);
-				IMetadata meta = dataset.getMetadata();
+				IMetadata meta = dataset.getFirstMetadata(IMetadata.class);
 				if (meta != null)
 					diffMetadataComp.setMetaData(meta);
 			}

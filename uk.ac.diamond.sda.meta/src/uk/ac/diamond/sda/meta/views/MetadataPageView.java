@@ -224,7 +224,7 @@ public class MetadataPageView extends ViewPart implements ISelectionListener, IP
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (part instanceof IMetadataProvider)
 			try {
-				meta = ((IMetadataProvider) part).getMetadata();
+				meta = ((IMetadataProvider) part).getFirstMetadata(IMetadata.class);
 				metadataChanged(meta);
 			} catch (Exception e) {
 				logger.error("There was an error reading the metadata from the selection", e);
@@ -249,7 +249,7 @@ public class MetadataPageView extends ViewPart implements ISelectionListener, IP
 						updatePath(filePath);
 					} else if (sel instanceof IMetadataProvider) {
 						try {
-							meta = ((IMetadataProvider) sel).getMetadata();
+							meta = ((IMetadataProvider) sel).getFirstMetadata(IMetadata.class);
 							metadataChanged(meta);
 						} catch (Exception e) {
 							logger.error("Could not capture metadata from selection", e);
@@ -294,7 +294,7 @@ public class MetadataPageView extends ViewPart implements ISelectionListener, IP
 
 		if (part instanceof IMetadataProvider) {
 			try {
-				meta = ((IMetadataProvider) part).getMetadata();
+				meta = ((IMetadataProvider) part).getFirstMetadata(IMetadata.class);
 				metadataChanged(meta);
 			} catch (Exception e) {
 				logger.warn("Could not get metadata from currently active window");
@@ -312,7 +312,7 @@ public class MetadataPageView extends ViewPart implements ISelectionListener, IP
 	public void partBroughtToTop(IWorkbenchPart part) {
 		if (part instanceof IMetadataProvider) {
 			try {
-				meta = ((IMetadataProvider) part).getMetadata();
+				meta = ((IMetadataProvider) part).getFirstMetadata(IMetadata.class);
 				metadataChanged(meta);
 			} catch (Exception e) {
 				logger.warn("Could not get metadata from currently active window");
