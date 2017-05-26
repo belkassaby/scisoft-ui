@@ -50,11 +50,11 @@ public class ARPESAxisConversion extends AbstractOperationBase<ARPESAxisConversi
 		} catch (Exception e) {
 			throw new OperationException(this, "Cannot find appropriate Axes in the data file");
 		}
-		double k = Math.sqrt(photon_energy.getDouble(0) - model.getWorkFunction())*0.51232;
-		
+		//double k = Math.sqrt(photon_energy.getDouble(0) - model.getWorkFunction())*0.51232;
+		double k = 0.51232;
 		for (ILazyDataset axis : axesMetadata.getAxis(0)) {
 			if (axis != null) {
-				if (axis.getName().startsWith("sapolar")) {
+				if (axis.getName().contains("sapolar")) {
 					try {
 						IDataset axisData = axis.getSlice(new Slice(null));
 						Dataset kx = Maths.multiply(Maths.sin(Maths.toRadians(axisData)), k);
@@ -72,7 +72,7 @@ public class ARPESAxisConversion extends AbstractOperationBase<ARPESAxisConversi
 		
 		for (ILazyDataset axis : axesMetadata.getAxis(1)) {
 			if (axis != null) {
-				if (axis.getName().startsWith("angle")) {
+				if (axis.getName().contains("angle")) {
 					try {
 						IDataset axisData = axis.getSlice(new Slice(null));
 						Dataset ky = Maths.multiply(Maths.sin(Maths.toRadians(axisData)), k);
