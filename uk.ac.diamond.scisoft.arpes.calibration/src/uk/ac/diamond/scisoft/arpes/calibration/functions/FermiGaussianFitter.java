@@ -42,8 +42,6 @@ public class FermiGaussianFitter {
 
 	private static final Integer FIT_DIRECTION = 1;
 
-	private AFunction lastFunction;
-
 	private DataMessageComponent calibrationData;
 	
 	private boolean isFinished = false;
@@ -305,37 +303,16 @@ public class FermiGaussianFitter {
 					"Input function must be of type FermiGauss");
 		}
 
-		String fitConvolutionValue = "On";// on
-
 		final double temperature = fitFunction.getParameterValue(1);
-		//FermiGauss initialFit = fitFermiNoFWHM(xAxis, values, new FermiGauss(fitFunction.getParameters()));
-		FermiGauss fittedFunction = null;
-//		if (lastFunction != null) { 
-//			fittedFunction = new FermiGauss(lastFunction.getParameters()); // "mu", "temperature", "BG_slope", "FE_step_height", "Constant", "FWHM"
-//		} else {
-			fittedFunction = new FermiGauss(fitFunction.getParameters()); // "mu", "temperature", "BG_slope", "FE_step_height", "Constant", "FWHM"
-//		}
+
+		FermiGauss fittedFunction = new FermiGauss(fitFunction.getParameters()); // "mu", "temperature", "BG_slope", "FE_step_height", "Constant", "FWHM"
+
 		double lowerLimitForFWHM = fittedFunction.getParameter(5).getLowerLimit();
 		fittedFunction.getParameter(5).setLowerLimit(0.0);
 		fittedFunction.getParameter(5).setValue(0.0);
-		fittedFunction.getParameter(0).setFixed(false);
-		fittedFunction.getParameter(1).setFixed(false);
-		fittedFunction.getParameter(2).setFixed(false);
-		fittedFunction.getParameter(3).setFixed(false);
-		fittedFunction.getParameter(4).setFixed(false);
-		fittedFunction.getParameter(5).setFixed(true);
-
-		values.setName("Setup");
-//		plotFunction(fittedFunction, xAxis, values);
-
-		// fit with a fixed fwhm letting the temperature vary
-		try {
-			Fitter.ApacheNelderMeadFit(new Dataset[] {xAxis}, values, fittedFunction);
-			values.setName("Fixed temperature fit");
-//			plotFunction(fittedFunction, xAxis, values);
-		} catch (Exception e) {
-			logger.debug("Exception occured while running ApacheNelderMeadFit with fixed fwhm: " + e.getMessage());
-		}
+		
+		fitFermiGauss(xAxis, values, fittedFunction, false, false, false, false, false, true);
+		
 		if (monitor != null && monitor.isCancelled()) {
 			throw new InterruptedException("Thread interrupted");
 		}
@@ -344,12 +321,9 @@ public class FermiGaussianFitter {
 		while (functionsSimilarIgnoreFWHM(fittedFunction,(FermiGauss)fitFunction, 0.0) && count < 5) {
 			logger.debug("Function not fitted, trying again :" + count);
 			count++;
-			try {
-				Fitter.ApacheNelderMeadFit(new Dataset[] {xAxis}, values, fittedFunction);
-			} catch (Exception e) {
-				//plotFunction(fittedFunction, xAxis, values);
-				logger.error("Exception occured while trying to fit again ApacheNelderMeadFit:" + e.getMessage());
-			}
+			
+			fitFermiGauss(xAxis, values, fittedFunction, false, false, false, false, false, true);
+			
 			if (monitor != null && monitor.isCancelled()) {
 				throw new InterruptedException("Thread interrupted");
 			}
@@ -363,64 +337,50 @@ public class FermiGaussianFitter {
 		// now reset the minimum value for the FWHM
 		fittedFunction.approximateFWHM(temperature);
 		
-//		plotFunction(fittedFunction, xAxis, values);
-		// return if that is all we need to do
-		if (fitConvolutionValue.contains("Off")) {
-//			plotFunction(fittedFunction, xAxis, values);
-			lastFunction = fittedFunction;
-			return fittedFunction;
-		}
-
 		//plotFunction(fittedFunction, xAxis, values);
 		
 		// Now fit the system quickly using several assumptions
 
 		fittedFunction.getParameter(5).setLowerLimit(lowerLimitForFWHM);
-		fittedFunction.getParameters()[0].setFixed(false);
-		fittedFunction.getParameters()[1].setFixed(true);
-		fittedFunction.getParameters()[2].setFixed(true);
-		fittedFunction.getParameters()[3].setFixed(true);
-		fittedFunction.getParameters()[4].setFixed(true);
-		fittedFunction.getParameters()[5].setFixed(false);
 		
-		try {
-			Fitter.ApacheNelderMeadFit(new Dataset[] {xAxis}, values, fittedFunction);
-//			plotFunction(fittedFunction, xAxis, values);
-		} catch (Exception e) {
-			logger.debug("Exception occured while running ApacheNelderMeadFit with assumptions: " + e.getMessage());
-		}
+		fitFermiGauss(xAxis, values, fittedFunction, false, true, true, true, true, false);
+
 		if (monitor != null && monitor.isCancelled()) {
 			throw new InterruptedException("Thread interrupted");
 		}
-		
-		// if this is all that is required return the new fitted value
-		if(fitConvolutionValue.contains("Quick")) {
-//			plotFunction(fittedFunction, xAxis, values);
-			lastFunction = fittedFunction;
-			return fittedFunction;
-		}
 
-		// Now fit the system properly with the Full function, but fixed temperature
-		fittedFunction.getParameters()[0].setFixed(false);
-		fittedFunction.getParameters()[1].setFixed(true);
-		fittedFunction.getParameters()[2].setFixed(false);
-		fittedFunction.getParameters()[3].setFixed(false);
-		fittedFunction.getParameters()[4].setFixed(false);
-		fittedFunction.getParameters()[5].setFixed(false);
-		try {
-			Fitter.ApacheNelderMeadFit(new Dataset[] {xAxis}, values, fittedFunction);
-		} catch (Exception e) {
-			//plotFunction(fittedFunction, xAxis, values);
-			logger.debug("Exception occured while running ApacheNelderMeadFit with full function: " + e.getMessage());
-		}
+		fitFermiGauss(xAxis, values, fittedFunction, false, true, false, false, false, false);
+		
 		if (monitor != null && monitor.isCancelled()) {
 			throw new InterruptedException("Thread interrupted");
 		}
 		values.setName("Final");
 		plotFunction(fittedFunction, xAxis, values);
 		logger.debug("temperature is {}",fittedFunction.getParameters()[1].getValue());
-		lastFunction = fittedFunction;
 		return fittedFunction;
+	}
+
+	private void fitFermiGauss(final Dataset xAxis, final Dataset values, FermiGauss fittedFunction, 
+			boolean fixMu, boolean fixTemperature, boolean fixBG_slope, boolean fixFE_step_height, 
+			boolean fixConstant, boolean fixFWHM) {
+		fittedFunction.getParameter(0).setFixed(fixMu);
+		fittedFunction.getParameter(1).setFixed(fixTemperature);
+		fittedFunction.getParameter(2).setFixed(fixBG_slope);
+		fittedFunction.getParameter(3).setFixed(fixFE_step_height);
+		fittedFunction.getParameter(4).setFixed(fixConstant);
+		fittedFunction.getParameter(5).setFixed(fixFWHM);
+
+		values.setName("Setup");
+//		plotFunction(fittedFunction, xAxis, values);
+
+		// fit with a fixed fwhm letting the temperature vary
+		try {
+			Fitter.ApacheNelderMeadFit(new Dataset[] {xAxis}, values, fittedFunction);
+			values.setName("Fixed temperature fit");
+//			plotFunction(fittedFunction, xAxis, values);
+		} catch (Exception e) {
+			logger.debug("Exception occured while running ApacheNelderMeadFit with fixed fwhm: " + e.getMessage());
+		}
 	}
 
 	private boolean functionsSimilarIgnoreFWHM(FermiGauss initialFit,
