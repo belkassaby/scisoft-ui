@@ -87,9 +87,9 @@ public class ARPESGoldCalibrationCorrection extends AbstractOperation<ARPESGoldC
 		result.setName("Fermi Edge Corrected");
 		
 		Dataset newEnergyAxis = Maths.subtract(xAxis, goldData.mean());
-		newEnergyAxis.imultiply(-1.0);
+//		newEnergyAxis.imultiply(-1.0);
 		newEnergyAxis.iadd(model.getEnergyOffset());
-		newEnergyAxis.setName("Binding Energy");
+		newEnergyAxis.setName("(E-Ef)");
 		
 		try {
 			axesMetadata = result.getMetadata(AxesMetadata.class).get(0);
