@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            name="uk.ac.diamond.scisoft.analysis.powder.indexer.rcp"
+            application="org.eclipse.e4.ui.workbench.swt.E4Application">
+         <property
+               name="applicationCSS"
+               value="platform:/plugin/uk.ac.diamond.scisoft.analysis.powder.indexer.rcp/css/default.css">
+         </property>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.views.PowderIndexerRoutineView"
+            icon="icons/powderIndexing.png"
+            id="uk.ac.diamond.scisoft.analysis.powder.diffraction.indexer.rcp.IndexingProcedureView1"
+            name="Powder Indexing"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            class="uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.wizards.PeakImportWizard"
+            id="uk.ac.diamond.scisoft.analysis.powder.diffraction.indexer.rcp.wizards.PeakImportWizard"
+            name="Peak Wizard">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.preferences.PowderIndexerPreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.dawnsci.preferences.root"
+            class="uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.preferences.PowderIndexerPreferencePage"
+            id="uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.preferences"
+            name="Powder Indexer Preferences">
+      </page>
+   </extension>
+
+</plugin>
