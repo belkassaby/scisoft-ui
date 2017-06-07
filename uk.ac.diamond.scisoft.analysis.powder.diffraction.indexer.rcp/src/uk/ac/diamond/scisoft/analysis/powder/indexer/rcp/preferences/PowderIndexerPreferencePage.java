@@ -86,7 +86,8 @@ public class PowderIndexerPreferencePage extends PreferencePage implements IWork
 		
 		//Should set the current indexer to have the subsequent indexerdirectory
 		String directory = directorySelector.getText();
-		getPreferenceStore().setValue(PowderIndexerConstants.indexer, directory );
+		String selectedIndexer = indexerCombo.getText();
+		getPreferenceStore().setValue(selectedIndexer, directory );
 		
 		
 		

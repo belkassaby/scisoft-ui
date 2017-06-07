@@ -73,9 +73,12 @@ public class ProgressIndexerRun implements IRunnableWithProgress {
 		}
 	}
 
-	
+	//TODO: more a tmp load to just have things setup
 	private void loadPowderIndexerPreferences(){
-		String indexerName = Activator.getDefault().getPreferenceStore().getString(PowderIndexerConstants.indexer);
+		
+		
+		
+		//String indexerName = Activator.getDefault().getPreferenceStore().getString(PowderIndexerConstants.indexer);
 		
 		// Configure peak finder on preference store go through all the params that match
 		Map<String, IPowderIndexerParam> params = indexer.getParameters();
@@ -105,8 +108,9 @@ public class ProgressIndexerRun implements IRunnableWithProgress {
 		
 		
 		//TODO: Load in widget parameters? well they might already be set but overiding here
-		
-		
+		String indexerDirectory = Activator.getLocalPreferenceStore().getString(indexer.getPowderRoutineID());
+		indexer.setIndexerDirectory(indexerDirectory +"/"); //TODO: tmp add directory here
+
 		indexer = loadStandardParameter(indexer, StandardConstantParameters.wavelength);
 		indexer = loadStandardParameter(indexer, StandardConstantParameters.maxVolume);
 		indexer = loadStandardParameter(indexer, StandardConstantParameters.minFigureMerit);
@@ -133,6 +137,8 @@ public class ProgressIndexerRun implements IRunnableWithProgress {
 	 * @return
 	 */
 	private IPowderIndexer loadStandardParameter(IPowderIndexer powderIndexer, String parameterName){
+		
+		
 		try {
 			IPowderIndexerParam param = powderIndexer.getParameter(parameterName);
 			Double widgetVal = Activator.getDefault().getPreferenceStore().getDouble(parameterName);	
@@ -150,10 +156,6 @@ public class ProgressIndexerRun implements IRunnableWithProgress {
 	}
 	
 	private IPowderIndexer loadStandardParameterBool(IPowderIndexer powderIndexer, String parameterName){
-		
-		String indexerDirectory = Activator.getLocalPreferenceStore().getString(powderIndexer.getPowderRoutineID());
-		
-		powderIndexer.setIndexerDirectory(indexerDirectory);
 		try {
 			IPowderIndexerParam param = powderIndexer.getParameter(parameterName);
 			Boolean widgetVal =  Activator.getDefault().getPreferenceStore().getBoolean(parameterName);	
