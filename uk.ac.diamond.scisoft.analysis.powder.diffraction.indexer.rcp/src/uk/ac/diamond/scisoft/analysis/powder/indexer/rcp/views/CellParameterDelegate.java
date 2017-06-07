@@ -199,7 +199,20 @@ public class CellParameterDelegate {
 		});
 		ret.add(table);
 		
+		//Gamma
 		table = new TableViewerColumn(viewer, SWT.CENTER, 7);
+		table.getColumn().setText("Volume" + " / \u212B" + "\u00B3");
+		table.getColumn().setWidth(80);
+		table.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				CellParameter cell = (CellParameter) element; 
+				return cell.getLattice().getVolume();
+			}
+		});
+		ret.add(table);
+		
+		table = new TableViewerColumn(viewer, SWT.CENTER, 8);
 		table.getColumn().setText("Figure of Merit");
 		table.getColumn().setWidth(80);
 		table.setLabelProvider(new ColumnLabelProvider() {
