@@ -362,13 +362,8 @@ public class PowderIndexerSetupWidget {
 					indexersToRun.remove(identifier);
 				}
 				
-				if (canRunRoutine()){
-					runIndexing.setEnabled(true);
-					runIndexing.setText(RUNINDEXINGTEXT);
-				} else {
-					runIndexing.setEnabled(false);
-				}
-				
+				runIndexing.setEnabled(canRunRoutine());
+					
 			}
 			
 			@Override
@@ -415,7 +410,7 @@ public class PowderIndexerSetupWidget {
 	
 	
 	private Boolean canRunRoutine(){
-		return 	(!runIndexing.isEnabled() && indexersToRun.size() > 0 && peakPos != null);
+		return 	(indexersToRun.size() >= 1 && peakPos != null);
 	}
 
 	
