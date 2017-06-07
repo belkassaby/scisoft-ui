@@ -150,6 +150,10 @@ public class ProgressIndexerRun implements IRunnableWithProgress {
 	}
 	
 	private IPowderIndexer loadStandardParameterBool(IPowderIndexer powderIndexer, String parameterName){
+		
+		String indexerDirectory = Activator.getLocalPreferenceStore().getString(powderIndexer.getPowderRoutineID());
+		
+		powderIndexer.setIndexerDirectory(indexerDirectory);
 		try {
 			IPowderIndexerParam param = powderIndexer.getParameter(parameterName);
 			Boolean widgetVal =  Activator.getDefault().getPreferenceStore().getBoolean(parameterName);	
@@ -187,7 +191,6 @@ public class ProgressIndexerRun implements IRunnableWithProgress {
 		
 		monitor.beginTask("Configuring indexing procedure...", IProgressMonitor.UNKNOWN);
 		indexer.configureIndexer();
-
 		monitor.beginTask("Running indexing procedure...", IProgressMonitor.UNKNOWN);
 		
 		//TODO: Spawn in job and catch a cancel

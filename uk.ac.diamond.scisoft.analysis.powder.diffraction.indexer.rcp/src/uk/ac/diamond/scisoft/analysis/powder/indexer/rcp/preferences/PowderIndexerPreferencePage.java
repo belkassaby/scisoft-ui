@@ -85,7 +85,10 @@ public class PowderIndexerPreferencePage extends PreferencePage implements IWork
 	private boolean storePreferences() {
 		
 		//Should set the current indexer to have the subsequent indexerdirectory
-		getPreferenceStore().setValue(PowderIndexerConstants.indexer, indexerDirectory);
+		String directory = directorySelector.getText();
+		getPreferenceStore().setValue(PowderIndexerConstants.indexer, directory );
+		
+		
 		
 		Iterator<Entry<String, Number>> iterator = currentParams.entrySet().iterator();
 		while(iterator.hasNext()) {
@@ -101,14 +104,13 @@ public class PowderIndexerPreferencePage extends PreferencePage implements IWork
 
 	@Override
 	protected Control createContents(Composite parent) {
-		
 		final Composite comp = new Composite(parent, SWT.NONE);
 		comp.setLayout(new GridLayout(1, false));
 		GridData gdc = new GridData(SWT.FILL, SWT.FILL, true, true);
 		comp.setLayoutData(gdc);
 
 		Group indexerGroup = new Group(comp, SWT.NONE);
-		indexerGroup.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		indexerGroup.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false));
 		indexerGroup.setLayout(new GridLayout(2, false));
 		indexerGroup.setText("Powder Indexing Controls");
 		
@@ -179,22 +181,24 @@ public class PowderIndexerPreferencePage extends PreferencePage implements IWork
 			
 			@Override
 			public void pathChanged(String path, TypedEvent event) {
-				
-					Button button = PowderIndexerPreferencePage.this.getApplyButton() ;
-
-					if (button != null) {
-						boolean canOK = true;
-						if (isFolderSelector) canOK = this.checkDirectory(path, false);
-						button.setEnabled(canOK);
-						indexerDirectory = path;
-						directorySelector.setText(indexerDirectory);
-					}
+					Button button = PowderIndexerPreferencePage.this.getApplyButton();
+//					
+//					if (button.getSelection()) {
+//						boolean canOK = true;
+//						if (isFolderSelector) canOK = this.checkDirectory(path, false);
+//						button.setEnabled(canOK);
+//						indexerDirectory = path;
+//						directorySelector.setText(indexerDirectory);
+//					}
 				
 			}
 		};
 		directorySelector.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		directorySelector.setText(indexerDirectory);		
 		
+		
+		specificIndexerParams.layout();
+    	
 		return comp;
 	}
 	
