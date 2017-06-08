@@ -199,7 +199,7 @@ public class CellParameterDelegate {
 		});
 		ret.add(table);
 		
-		//Gamma
+		//Volume
 		table = new TableViewerColumn(viewer, SWT.CENTER, 7);
 		table.getColumn().setText("Volume" + " / \u212B" + "\u00B3");
 		table.getColumn().setWidth(80);
@@ -208,8 +208,9 @@ public class CellParameterDelegate {
 			public String getText(Object element) {
 				CellParameter cell = (CellParameter) element; 
 				
-				Double vol = cell.getLattice().getVolume();
-				return Double.toString(vol);
+				//Double vol = cell.getLattice().getVolume();
+				//Double.toString(vol);
+				return "-";
 			}
 		});
 		ret.add(table);

@@ -92,7 +92,7 @@ public class PowderIndexerActions {
 					//TODO: would like to indent this action. Need to chagne the action setting
 			}
 		};
-		//searchDB.setImageDescriptor(uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.Activator.imageDescriptorFromPlugin("uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp", "icons/cellSearch.png"));
+		searchDB.setImageDescriptor(Activator.getImageDescriptor("icons/cellSearchDB.png"));
 		toolbar.add(searchDB);
 		
 		

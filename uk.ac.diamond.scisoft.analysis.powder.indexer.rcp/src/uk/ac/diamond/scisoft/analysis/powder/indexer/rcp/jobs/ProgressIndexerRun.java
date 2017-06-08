@@ -224,7 +224,13 @@ public class ProgressIndexerRun implements IRunnableWithProgress {
 		
 		monitor.beginTask("Terminating the indexing procedure...", IProgressMonitor.UNKNOWN);
 		indexer.stopIndexer();
-
+		
+		if(currentData.isEmpty()){
+			monitor.setTaskName("No solutions were found");
+		} else {
+			monitor.setTaskName("Solutions were found");
+		}
+		
 		monitor.done();
 	}
 
