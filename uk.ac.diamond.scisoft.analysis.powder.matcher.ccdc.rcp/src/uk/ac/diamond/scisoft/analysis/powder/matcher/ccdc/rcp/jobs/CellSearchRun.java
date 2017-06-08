@@ -148,7 +148,7 @@ public class CellSearchRun implements IRunnableWithProgress {
 		} catch (Exception ex){
 			System.out.println(ex);
 		
-			monitor.subTask("Unable to configure the matches search type");
+			monitor.subTask("Unable to configure the matched search type");
 			monitor.setCanceled(true);
 			monitor.done();
 		}

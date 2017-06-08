@@ -29,12 +29,7 @@ public class CellSearchActions {
 	
 	public void createActions(IToolBarManager toolbar) {		
 
-		final Action search = new Action("Search...") {
-			public void run() {				
-				//TODO:open dialog ... wizard? not really.CellSearchConfigWidget(manager);
-			}
-		};
-		toolbar.add(search);
+		//TODO: do not use many actions here
 
 	}
 	

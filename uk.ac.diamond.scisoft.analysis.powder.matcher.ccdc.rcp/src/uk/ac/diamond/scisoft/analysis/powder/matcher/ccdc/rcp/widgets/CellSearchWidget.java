@@ -9,6 +9,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.dialogs.DialogMessageArea;
+import org.eclipse.jface.dialogs.IconAndMessageDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -22,6 +24,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -61,6 +64,8 @@ import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.UnitCell;
  * 
  * TODO:viewer not clear the buttons I made...
  * 
+ * TODO: grab the logs of the python to determine where the problem in the configuration lies
+ * 
  * @author Dean P. Ottewell
  *
  */
@@ -80,8 +85,15 @@ public class CellSearchWidget {
 	Button configSearch;
 	Button saveCif;
 	
+	//Server CCDC status
+	Boolean searcherStatus;
+	
 	public CellSearchWidget(CellSearchManager manager) {
 		this.manager = manager;
+		
+		//Force python configuration here
+		CCDCService searchService = new CCDCService();
+		searcherStatus = searchService.serverAvaliable();
 	}
 
 	public void createControl(final Composite parent) {
@@ -133,7 +145,6 @@ public class CellSearchWidget {
 		searcher.setBackground(parent.getBackground()); 
 		
 		configSearch = new Button(searcher, SWT.PUSH);
-		configSearch.setText("Search...");
 		configSearch.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		configSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -154,7 +165,7 @@ public class CellSearchWidget {
 //					
 					//configBean.setUnitcell(tmpCell);
 					//Lattice latt = new Lattice.LatticeBuilder(5.4767).setB(5.4767).setC(5.4767).setA(90.0).setBe(90.0).setGa(90.0).build();
-					Lattice latt = new Lattice(0, 0, 0, 0, 0, 0);
+					Lattice latt = new Lattice(5.4767, 5.4767, 5.4767, 90.0, 90.0, 90.0);
 					configBean.setSearchLattice(latt);
 					
 					configBean.setElements("H"); //TODO:Open elements table for this
@@ -197,9 +208,15 @@ public class CellSearchWidget {
 				if (wd.open() == WizardDialog.OK);
 			}	
 		});
-		configSearch.setEnabled(true); //Disabled until peak data loaded
-		//configSearch.setImage(Activator.getImage("icons/autoIndex.png"));
-
+		
+		if(searcherStatus) {
+			configSearch.setText("Search...");
+			configSearch.setEnabled(searcherStatus); //Disabled until peak data loaded
+			//configSearch.setImage(Activator.getImage("icons/autoIndex.png"));
+		} else {
+			configSearch.setText("Configuration");
+			configSearch.setEnabled(searcherStatus); //Disabled until peak data loaded
+		}
 		
 		runSearch = new Button(searcher, SWT.PUSH);
 		runSearch.setText("Run");
@@ -310,6 +327,22 @@ public class CellSearchWidget {
 		};
 		
 		manager.addSearchListener(listener);
+		
+		ProgressMonitorDialog dia = new ProgressMonitorDialog(Display.getCurrent().getActiveShell());
+		
+		
+		//TODO: method is slightly invasive...
+		if(!searcherStatus){
+			IconAndMessageDialog alert = new IconAndMessageDialog(Display.getCurrent().getActiveShell()) {
+				
+				@Override
+				protected Image getImage() {
+					// TODO Auto-generated method stub
+					return null;
+				}
+			};
+			alert.open();
+		}
 		
 		//Now create viewer
 		createTableControl(parent);
