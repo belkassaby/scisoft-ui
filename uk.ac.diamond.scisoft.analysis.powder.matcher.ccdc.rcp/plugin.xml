@@ -4,7 +4,6 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            category="uk.ac.diamond.scisoft.analysis.rcp"
             class="uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.views.CellSearchRoutineView"
             icon="icons/cellSearch.png"
             id="uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.CellSearchRoutineView"
