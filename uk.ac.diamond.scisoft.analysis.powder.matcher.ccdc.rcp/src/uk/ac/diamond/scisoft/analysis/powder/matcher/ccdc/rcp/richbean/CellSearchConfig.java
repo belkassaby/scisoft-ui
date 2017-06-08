@@ -74,8 +74,6 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 	
 	private Crystal crystalSys;
 	
-	private Lattice latt;
-	
 	public CellSearchConfig(){
 		//intialise unitcell
 		//this.unitcell = new CellParameter();
@@ -144,7 +142,14 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 	}
 	
 	public void setSearchLattice(Lattice latt){
-		this.latt = latt;
+		//this.latt = latt;
+		setAVal(latt.getA());
+		setBVal(latt.getB());
+		setCVal(latt.getC());
+		setAlphaVal(latt.getAl());
+		setBetaVal(latt.getBe());
+		setGammaVal(latt.getGa());
+		
 		this.crystalSys = new Crystal(latt); //,this.crystalSys.getCrystalsystem());
 	}
 	
@@ -200,10 +205,6 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 	@Override
 	public Crystal getSearchCrystal() {
 		return crystalSys;
-	}
-	@Override
-	public Lattice getLattice() {
-		return crystalSys.getUnitCell().getLattice();
 	}
 	
 	@Override
