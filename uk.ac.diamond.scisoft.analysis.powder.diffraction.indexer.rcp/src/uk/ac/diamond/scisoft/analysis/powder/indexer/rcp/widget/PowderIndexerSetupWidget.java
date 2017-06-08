@@ -19,9 +19,12 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -305,7 +308,7 @@ public class PowderIndexerSetupWidget {
 				
 				ProgressMonitorDialog dia;// = new ProgressMonitorDialog(Display.getCurrent().getActiveShell());
 				
-				dia = new ConsoleLogProgress(Display.getCurrent().getActiveShell());
+				dia = new IndexerProgressDialog(Display.getCurrent().getActiveShell());
 				
 				
 				if (indexersToRun.size()!= 0 ){
@@ -315,7 +318,6 @@ public class PowderIndexerSetupWidget {
 				for(String shouldRun : indexersToRun) {
 					
 						ProgressIndexerRun job = new ProgressIndexerRun(shouldRun, "tmptst", manager,peakPos);
-				
 						
 						try {
 							dia.run(true, true, job);
@@ -427,11 +429,11 @@ public class PowderIndexerSetupWidget {
 	}
 }
 
-class ConsoleLogProgress extends ProgressMonitorDialog {
+class IndexerProgressDialog extends ProgressMonitorDialog {
 
 	private MessageConsole messageConsole; 
 	
-	public ConsoleLogProgress(Shell parent) {
+	public IndexerProgressDialog(Shell parent) {
 		super(parent);
 		//this.getShell().setText("Determining Structure");
 		//this.getShell().setImage( Activator.getImage("icons/powderIndexing.png"));
@@ -450,23 +452,10 @@ class ConsoleLogProgress extends ProgressMonitorDialog {
 	protected void finishedRun() {
 		// TODO Auto-generated method stub
 		//Do not close but change the button
-		Button butt = new Button(this.getShell(), SWT.NONE);
-		
-		butt.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				close();
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
-		super.finishedRun();
+		Button cancel = getCancelButton();
+		cancel.setText("Finish");
+	
+		//super.finishedRun();
 	}
 	
 	
@@ -477,6 +466,11 @@ class ConsoleLogProgress extends ProgressMonitorDialog {
 	}
 	
 	
+	@Override
+	protected void cancelPressed() {
+		decrementNestingDepth(); //TODO: this will break things
+		super.cancelPressed();
+	}
 	
 	@Override
 	protected Control createContents(Composite parent) {
@@ -498,7 +492,16 @@ class ConsoleLogProgress extends ProgressMonitorDialog {
 //		createDialogAndButtonArea(parent);
 //
 //		
-		return super.createContents(parent);
+		super.createContents(parent);
+		
+//		Text outputArea = new Text(parent, SWT.V_SCROLL);
+//		outputArea.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true));
+//		outputArea.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
+//		outputArea.setText("I am a test string");
+//		outputArea.setEditable(false);
+		
+	
+		return parent;
 	}
 	
 	private MessageConsole getMessageConsole() {

@@ -196,6 +196,7 @@ public class ProgressIndexerRun implements IRunnableWithProgress {
 		monitor.beginTask("Running indexing procedure...", IProgressMonitor.UNKNOWN);
 		
 		//TODO: Spawn in job and catch a cancel
+		
 		indexer.runIndexer();
 		
 		
@@ -211,14 +212,17 @@ public class ProgressIndexerRun implements IRunnableWithProgress {
 			status = indexer.getStatus();
 			monitor.subTask(status);
 			logger.info(status);
+			
 		}
 
 		currentData = indexer.getResultCells();
 
-		if (!currentData.isEmpty())
+		Boolean dataSt = currentData.isEmpty();
+		if (!currentData.isEmpty()){
 		 	updateOnFinish(currentData);
-
-		monitor.beginTask("Terminateing the indexing procedure...", IProgressMonitor.UNKNOWN);
+		}
+		
+		monitor.beginTask("Terminating the indexing procedure...", IProgressMonitor.UNKNOWN);
 		indexer.stopIndexer();
 
 		monitor.done();
