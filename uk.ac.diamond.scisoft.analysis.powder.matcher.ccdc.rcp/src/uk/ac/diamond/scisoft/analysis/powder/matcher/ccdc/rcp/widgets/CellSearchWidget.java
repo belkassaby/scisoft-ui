@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -92,8 +93,8 @@ public class CellSearchWidget {
 		this.manager = manager;
 		
 		//Force python configuration here
-		CCDCService searchService = new CCDCService();
-		searcherStatus = searchService.serverAvaliable();
+//		CCDCService searchService = new CCDCService();
+		searcherStatus = true;//searchService.serverAvaliable();
 	}
 
 	public void createControl(final Composite parent) {
@@ -163,7 +164,7 @@ public class CellSearchWidget {
 //					tmpCell.setAngleBeta(90.0);
 //					tmpCell.setAngleGamma(90.0);
 //					
-					//configBean.setUnitcell(tmpCell);
+//					configBean.setUnitcell(tmpCell);
 					//Lattice latt = new Lattice.LatticeBuilder(5.4767).setB(5.4767).setC(5.4767).setA(90.0).setBe(90.0).setGa(90.0).build();
 					Lattice latt = new Lattice(5.4767, 5.4767, 5.4767, 90.0, 90.0, 90.0);
 					configBean.setSearchLattice(latt);
@@ -417,9 +418,12 @@ public class CellSearchWidget {
 
 	        	            CCDCService searcher = new CCDCService();
 	        	            searcher.generateRefcodeReport("/tmp/", unitCell.getRefcode());
-	        	            //TODO: open in browser editor
 	        	            org.eclipse.swt.program.Program.launch("/tmp/" + unitCell.getRefcode()+".html");
-	        	            	        	            
+	        	            //TODO: open in browser editor
+
+	        	            Browser browse = new Browser(Display.getCurrent().getActiveShell(), SWT.NONE);
+	        	            browse.setUrl("/tmp/" + unitCell.getRefcode()+".html");
+	        	            
 	        	            break;
 	        	          }
 	        	        }

@@ -207,7 +207,9 @@ public class CellParameterDelegate {
 			@Override
 			public String getText(Object element) {
 				CellParameter cell = (CellParameter) element; 
-				return Double.toString(cell.getLattice().getVolume());
+				
+				Double vol = cell.getLattice().getVolume();
+				return Double.toString(vol);
 			}
 		});
 		ret.add(table);

@@ -60,14 +60,14 @@ public class CellSearchRun implements IRunnableWithProgress {
 		if(this.searchConfig.getUnitCell() != null){
 			monitor.subTask("Setting Search lattice");
 			monitor.subTask("Setting Search lattices: " + searchConfig.getSearchCrystal().toString());
-			searchService.setLattice(this.searchConfig.getSearchCrystal());
+		//	searchService.setLattice(this.searchConfig.getSearchCrystal());
 			//monitor.subTask("Unable to set lattice");
 			//monitor.setCanceled(true);
 		}
 		
 		if(this.searchConfig.getAbsoluteAngleTol() > 0 || this.searchConfig.getPercentageLengthTol() > 0){
 			monitor.subTask("Setting Search Tolerance");
-			searchService.setCrystalSearchTolerance(this.searchConfig.getAbsoluteAngleTol(), this.searchConfig.getPercentageLengthTol());
+			//searchService.setCrystalSearchTolerance(this.searchConfig.getAbsoluteAngleTol(), this.searchConfig.getPercentageLengthTol());
 			monitor.subTask("Success Setting Search Tolerance");
 		}
 		

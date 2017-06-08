@@ -145,7 +145,7 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 	
 	public void setSearchLattice(Lattice latt){
 		this.latt = latt;
-	//	this.crystalSys = new Crystal(latt,this.crystalSys.getCrystalsystem());
+		this.crystalSys = new Crystal(latt); //,this.crystalSys.getCrystalsystem());
 	}
 	
 	
@@ -170,7 +170,7 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 	}
 	
 	public void setCVal(double c){
-		this.setCVal(c);
+		this.setC(c);
 	}
 	public double getCVal(){
 		return this.getC();
@@ -216,7 +216,7 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 	public UnitCell getUnitCell() {
 		return crystalSys.getUnitCell();
 	}	
-
+	
 	public void setAbsoluteAngleTol(double angleTol) {
 		this.angleTol = angleTol;
 	}

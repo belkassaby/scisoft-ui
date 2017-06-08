@@ -182,9 +182,6 @@ public class PowderIndexerSetupWidget {
 			}
 		};
 		manager.addCellListener(listener);
-
-		
-		consoleStreamView();
 		
 		
 		Composite indexerConfiguration = new Composite(comp, SWT.NONE);
