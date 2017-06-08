@@ -155,7 +155,8 @@ public class PowderIndexerActions {
 		 * TMP cells pass
 		 * */
 		
-		CellInteraction cellInteract = cells.get(0).getCell();
+		CellParameter cellInteract = cells.get(0);
+		
 		//Crystal cell =new Crystal(new Lattice.LatticeBuilder(1).build(), CrystalSystem.CUBIC); 
 		Crystal cell = cellInteract.getSearchCrystal();
 		
