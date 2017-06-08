@@ -10,14 +10,21 @@ package uk.ac.diamond.scisoft.arpes.calibration.functions;
 
 import org.eclipse.dawnsci.analysis.api.fitting.functions.IFunction;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
+import org.eclipse.dawnsci.analysis.dataset.impl.Image;
 import org.eclipse.january.dataset.Dataset;
 import org.eclipse.january.dataset.DatasetFactory;
+import org.eclipse.january.dataset.DoubleDataset;
 import org.eclipse.january.dataset.Maths;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.ac.diamond.scisoft.analysis.fitting.functions.FermiGauss;
 import uk.ac.diamond.scisoft.arpes.calibration.utils.ARPESCalibrationConstants;
 
 public class PrepareFermiGaussianFunction {
+	
+	private static final Logger logger = LoggerFactory.getLogger(PrepareFermiGaussianFunction.class);
+	
 	private static final Integer FIT_DIRECTION = 1;
 	private FermiGauss fg;
 
@@ -29,22 +36,29 @@ public class PrepareFermiGaussianFunction {
 		
 		Dataset xAxisDS = DatasetFactory.createFromObject(calibrationData.getList(ARPESCalibrationConstants.ENERGY_AXIS));
 		if (xAxisDS == null)
-			xAxisDS = DatasetFactory.createRange(shape[fitDim], 0, -1, Dataset.FLOAT64);
-
+			xAxisDS = DatasetFactory.createRange(DoubleDataset.class, shape[fitDim], 0, -1);
+			logger.warn("Could not find a energy axis, creating one");
+		
 		Double temperatureValue = 10.0;
 		try {
 			temperatureValue = (Double) calibrationData.getUserObject(ARPESCalibrationConstants.TEMPERATURE_PATH);
 		} catch (Exception e) {
-			// TODO: Should log something.
+			logger.warn("Could not find a temperature value, using 10K as an estimate");
 		}
 		
 		fg = new FermiGauss();
 		
 		// Mu
-		double min = (Float)dataDS.min(true);
-		double height = (Float)dataDS.max(true) - (Float)dataDS.min(true);
-		int crossing = Maths.abs(Maths.subtract(dataDS, (min+(height/2.0)))).minPos()[0];
+		Dataset smoothed = Image.gaussianBlurFilter(dataDS, 5);
+		smoothed = smoothed.mean(0, true);
+		double min = (double) smoothed.min(true);
+		double height = (float)dataDS.max(true) - (float)dataDS.min(true);
+		int crossing = Maths.abs(Maths.subtract(smoothed, (min+(height/2.0)))).minPos()[0];
 
+		min = (double) smoothed.getSlice(new int[] {crossing+5}, new int[] {smoothed.getShape()[0]}, new int[] {1}).mean(true);
+		double max = (double) smoothed.getSlice(new int[] {0}, new int[] {crossing-5}, new int[] {1}).mean(true);
+		height = max - min;
+		
 		fg.getParameter(0).setValue(xAxisDS.getDouble(crossing));
 		fg.getParameter(0).setLowerLimit((Double)xAxisDS.min(true));
 		fg.getParameter(0).setUpperLimit((Double)xAxisDS.max(true));
@@ -77,11 +91,6 @@ public class PrepareFermiGaussianFunction {
 		
 		fg.setName(fg.getName());
 
-		// Update the names of the axis so that plotting works more nicely later on
-		// xAxisDS.setName("Energy");
-		// dataDS.setName("Intensity");
-		// result.addList(dataset, dataDS);
-		// result.addList(xAxis, xAxisDS);
 	}
 
 	public IFunction getPreparedFunction() {
