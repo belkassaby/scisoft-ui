@@ -13,6 +13,8 @@ import java.lang.reflect.InvocationTargetException;
 import org.dawb.common.ui.monitor.ProgressMonitorWrapper;
 import org.dawb.common.ui.widgets.ActionBarWrapper;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.plotting.api.IPlottingSystem;
 import org.eclipse.dawnsci.plotting.api.PlotType;
@@ -23,11 +25,17 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.progress.UIJob;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.ac.diamond.scisoft.arpes.calibration.functions.FermiGaussianFitter;
 import uk.ac.diamond.scisoft.arpes.calibration.utils.ARPESCalibrationConstants;
 
 public class GoldCalibrationPageThree extends CalibrationWizardPage {
+	
+	private static final Logger logger = LoggerFactory.getLogger(GoldCalibrationPageThree.class);
+	
 	private DataMessageComponent calibrationData;
 	private IPlottingSystem<Composite> fitUpdateSystem;
 	private IPlottingSystem<Composite> resolutionSystem;
@@ -46,6 +54,17 @@ public class GoldCalibrationPageThree extends CalibrationWizardPage {
 			@Override
 			public void run(IProgressMonitor monitor) {
 				monitor.beginTask("Running Fermi-Gaussian convoluted...", -1);
+				UIJob job = new UIJob(getShell().getDisplay(), "Refresh Job") {
+
+					@Override
+					public IStatus runInUIThread(IProgressMonitor monitor) {
+						getShell().redraw();
+						getShell().pack(true);
+						return Status.OK_STATUS;
+					}
+
+				};
+				job.schedule();
 				fitter.fit(new ProgressMonitorWrapper(monitor));
 			}
 		};
@@ -118,13 +137,13 @@ public class GoldCalibrationPageThree extends CalibrationWizardPage {
 		calibrationData.addUserObject(ARPESCalibrationConstants.RESIDUALS_SYSTEM, residualsSystem);
 
 		setControl(sashForm);
-		getShell().pack();
 	}
 
 	@Override
 	public boolean runProcess() throws InterruptedException {
-		System.out.println("Page 3");
+		logger.debug("Page 3");
 		try {
+			getShell().redraw();
 			getContainer().run(true, true, fitterWithProgress);
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
