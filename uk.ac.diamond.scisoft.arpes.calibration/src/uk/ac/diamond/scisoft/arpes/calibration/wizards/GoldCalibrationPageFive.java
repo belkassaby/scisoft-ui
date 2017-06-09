@@ -70,7 +70,7 @@ public class GoldCalibrationPageFive extends CalibrationWizardPage {
 		txtLabel.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 3, 1));
 
 		txtPath = new Text(container, SWT.BORDER);
-		txtPath.setEditable(true);
+		txtPath.setEditable(false);
 		// set default name
 		String filepath = (String) calibrationData.getUserObject(ARPESCalibrationConstants.FILE_PATH);
 // TODO this seems to fail on windows, and it would be nice to have a better default.
