@@ -77,6 +77,10 @@ public class CellSearchConfig extends Lattice implements ICellSearchConfig, Seri
 		super(a, b, c, al, be, ga);
 	}
 	
+	public CellSearchConfig(Lattice latt) {
+		super(latt.getA(), latt.getB(), latt.getC(), latt.getAl(), latt.getBe(), latt.getGa());
+	}
+	
 	public String getElements() {
 		return elements;
 	}
@@ -124,10 +128,6 @@ public class CellSearchConfig extends Lattice implements ICellSearchConfig, Seri
 
 	public void setChemicalName(String associateName) {
 		this.chemicalName = associateName;
-	}
-
-	public void setSearchCrysal(Crystal crystal){
-		this.crystalSys = crystal;
 	}
 
 	public void setAbsoluteAngleTol(double angleTol) {

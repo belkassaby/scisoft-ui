@@ -52,6 +52,7 @@ import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.CellSearc
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.wizards.CellSearchConfigWizard;
 
 import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Crystal;
+import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Lattice;
 
 /**
  * 
@@ -103,21 +104,22 @@ public class CellSearchWidget {
 				
 				Object obj = event.getProperty("INDEXERRESULTS");
 				
-				Crystal receiveObj = (Crystal) event.getProperty("INDEXERRESULTS");
+				Lattice receiveLattice = (Lattice) event.getProperty("INDEXERRESULTS");
 				
-				if(receiveObj != null) {
-					CellSearchConfig configBean = new CellSearchConfig();
-					configBean.setSearchCrysal(receiveObj);
+				if(receiveLattice != null) {
+					CellSearchConfig configBean = new CellSearchConfig(receiveLattice);
+					
+					
+					//Setting everything to prevent a complain
 					configBean.setElements("H"); //TODO:Open elements table for this
 					configBean.setRefcode("ARAVIZ");
 					configBean.setFormula("Y1 3+,3(H4 B1 1-)");
 					configBean.setSpacegroup("Pm-3m");
 					configBean.setChemicalName("Yttrium tris(tetrahydridoborate");
 					
-					//Setting everything to prevent a complain
 					configBean.setAbsoluteAngleTol(1);
 					configBean.setPercentageLengthTol(1);
-					
+
 					configBean.setCcdcNum("0x");
 					
 					sConfig = configBean;
@@ -217,41 +219,7 @@ public class CellSearchWidget {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				//TODO: save all those that are checked
-			
-//				TableItem[] items = viewer.getTable().getItems();
-//				
-//				CellEditor[] editors = (CellEditor[]) viewer.getCellEditors();
-//				
-//				
-//				TableViewerColumn checker = ret.get(ret.size()-1);
-//				String testTmp = checker.getColumn().getText();
-//				
-//				for (TableItem item : items){
-//					
-//					//Grab last co umn 
-//					String checkVal = item.getText(8);//viewer.getTable().getColumnCount());
-//					boolean testCheck= item.getChecked();
-//					
-//					
-//					
-////					CellLabelProvider labTmp = viewer.getLabelProvider(7);
-////					
-////					CellLabelProvider lab = viewer.getLabelProvider(7);
-////					
-////					CheckerLabelProvider checkerLab = (CheckerLabelProvider) viewer.getLabelProvider(7);
-////					
-////					Object Data = item.getData();
-////
-////					Button checker = checkerLab.buttons.get(Data);
-//					
-//					//table.setLabelProvider(new ColumnLabelProvider() {
-//					
-//					
-//					
-//					Object test =item.getText();
-//					
-//				}
-//				
+
 				CCDCService searchService = new CCDCService();
 				
 				List<ICellSearchConfig> cellsConfig= (List<ICellSearchConfig>) viewer.getInput();
@@ -263,8 +231,7 @@ public class CellSearchWidget {
 					searchService.generateRefcodeCif("/tmp/", cell.getRefcode());
 					
 				}
-				
-				//searchService.generateRefcodeCif("/tmp/", refcode);
+
 			}	
 		});
 		saveCif.setEnabled(false); //Disabled until peak data loaded
@@ -358,7 +325,7 @@ public class CellSearchWidget {
 		//TODO: data content
 		//viewer.setInput(manager.getCellData());
 		//manager.setResultsView(viewer);
-		
+
 		viewer.refresh();
 	}
 	
@@ -553,7 +520,6 @@ public class CellSearchWidget {
         	    public void widgetSelected(SelectionEvent e)
         	    {
         	    	cell.setText(Boolean.toString(button.getSelection()));
-        	    	
         	    }
         	});
         	     	

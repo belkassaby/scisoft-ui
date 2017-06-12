@@ -94,18 +94,6 @@ public class CellParameterDelegate {
 		viewer.refresh();
 	}
 	
-	//TODO: eally belongs somewhere else ... like a action button delegate
-	//TODO: need delete table values action
-	private Action exportCellAction(){
-		return new Action("Export Cells", IAction.AS_PUSH_BUTTON) {
-			public void run() {
-				//TODO:maybe have a wizard for this 
-			}
-		};
-		//Setup activator correctly. probably want a *.indexer.rcp and change that 
-		//export.setImageDescriptor(Activator.getImageDescriptor("icons/mask-export-wiz.png"));
-	}
-	
 	public List<TableViewerColumn> createColumns(final TableViewer viewer) {
 		
 		List<TableViewerColumn> ret = new ArrayList<TableViewerColumn>(8);
@@ -223,7 +211,7 @@ public class CellParameterDelegate {
 			public String getText(Object element) {
 				CellParameter cell = (CellParameter) element; 
 
-				return cell.getFigureMerit().toString();
+				return Double.toString(cell.getFigureMerit());
 			}
 		});
 		ret.add(table);
