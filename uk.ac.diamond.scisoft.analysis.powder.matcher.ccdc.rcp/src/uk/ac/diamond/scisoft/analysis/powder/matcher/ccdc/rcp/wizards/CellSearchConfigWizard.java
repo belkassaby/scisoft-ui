@@ -16,7 +16,7 @@ import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.UnitCellC
 /**
  * TODO: adjust to spawn peak finder widget
  * 
- * @edits Dean P. Ottewell
+ * @author Dean P. Ottewell
  */
 public class CellSearchConfigWizard extends WizardPage {
 

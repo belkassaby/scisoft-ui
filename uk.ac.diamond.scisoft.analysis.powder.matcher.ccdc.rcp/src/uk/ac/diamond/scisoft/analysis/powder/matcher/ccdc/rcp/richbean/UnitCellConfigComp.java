@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * Composite setup for cell conifg
- * 	TODO: check the invlaid entries for parameters such as element limit choice and ccdcNum limit size 
+ * 	TODO: check the invalid entries for parameters such as element limit choice and ccdcNum limit size 
  * @author Dean P. Ottewell
  */
 public class UnitCellConfigComp extends Composite {
@@ -185,9 +185,6 @@ public class UnitCellConfigComp extends Composite {
 		this.lengthTol = new TextFieldDecorator(lengthTolTxt, lengthTolBounds);
 		controlUseGenerator(comp, lengthTol,false);
 		lengthTolTxt.setEnabled(false);
-
-		
-		
 		
 		//RegexDecorator based on elements
 		//Search Configuration

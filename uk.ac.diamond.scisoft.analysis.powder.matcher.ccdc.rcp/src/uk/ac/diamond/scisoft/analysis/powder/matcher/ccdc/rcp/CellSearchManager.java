@@ -19,13 +19,11 @@ import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Crystal;
  * 
  * There is a searching section too. 
  * 
- * Events:
- * 	- Cell Config Updates
- * 	- 
- *
- * Jobs spwan inside the views
  * 
  * TODO: what to do if the python setup breaks mid run
+ * 
+ * TODO: decide on CellParameter
+ * 
  * @author Dean P. Ottewell
  */
 public class CellSearchManager {
@@ -41,9 +39,6 @@ public class CellSearchManager {
 	List<CellParameter> searchResults; 
 	
 	public CellSearchManager(){
-		
-		//TODO: first handle a bad server
-		//initialiseSearcher();
 		listeners = new HashSet<ICellSearchListener>();
 	}
 	
@@ -51,11 +46,7 @@ public class CellSearchManager {
 	public void initialiseSearcher(){
 		searcher = new CCDCService();
 		
-		
 		searcher.setUpServer();
-		
-		
-		
 		
 		if(searcher.serverAvaliable()){
 			//Successfully available

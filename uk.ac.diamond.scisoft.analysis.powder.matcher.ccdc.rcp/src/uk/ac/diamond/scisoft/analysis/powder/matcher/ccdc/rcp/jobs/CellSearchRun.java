@@ -18,7 +18,7 @@ import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.CellSearc
 
 
 /**
- * Searches over CCDC and populates controller with results
+ * Searches over CCDC and populates controller with results/
  * 
  * @author Dean P. Ottewell
  */
@@ -93,12 +93,13 @@ public class CellSearchRun implements IRunnableWithProgress {
 		//		}
 		
 		//Filtering on configuration
+		//TODO: call all filters that should be additionally applied
+		
 		
 		// Check if indexer process is still active
 		monitor.beginTask("Gathering search matches...", IProgressMonitor.UNKNOWN);
 		Object matches = searchService.gatherMatches();
 		//TODO:Check empty matches
-
 		
 		try {
 			Object[] matchCast = (Object[]) matches;
@@ -111,6 +112,9 @@ public class CellSearchRun implements IRunnableWithProgress {
 		} catch (Exception ex) {
 			System.out.println(ex);
 		}
+		
+		
+		
 		
 		//TMP: just needed to cast into usable items to display
 		//TODO: add proper cast system
@@ -154,6 +158,8 @@ public class CellSearchRun implements IRunnableWithProgress {
 		}
 		
 		//TODO: set searchhits
+		
+		
 		//if (!manager.searchhits.isEmpty())
 		monitor.subTask("Search successful. Best of luck!");
 		

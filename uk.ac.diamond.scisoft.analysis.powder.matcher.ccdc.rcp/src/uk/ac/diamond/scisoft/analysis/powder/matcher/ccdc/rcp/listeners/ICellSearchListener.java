@@ -12,12 +12,10 @@ import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Crystal;
  */
 public interface ICellSearchListener extends EventListener {
 	
-	//TODO: will then updates based 
 	public void updateSearchConfig(ICellSearchConfig searchConfig);
 	
 	public void updateSearchCrystalConfig(Crystal searchCrystal);
 	
-	//TODO: a performing search trigger
 	public void perfromSearch();
 	
 	public void loadSearchMatches(List<ICellSearchConfig> searchConfig);

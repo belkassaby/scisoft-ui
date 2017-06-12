@@ -19,7 +19,7 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 	
 	@Override
 	public boolean equals(Object obj) {
-		//TODO:
+		//TODO:does it matter though...
 		return true;
 	}	
 	@Override
@@ -30,8 +30,6 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 		//TODO: complete with reset of values
 		return result;
 	}
-	
-	//CellParameter
 	
 	/**
 	 * Must implement clear() method on beans being used with BeanUI.
@@ -47,9 +45,6 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 		this.crystalSys = null;
 	}
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private String elements;
@@ -69,22 +64,10 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 	private Double angleTol;
 	
 	//TODO: keep cell parameter? has merit and just wrap this around crystal
-	//private CellParameter unitcell;
-
 	
 	private Crystal crystalSys;
 	
 	public CellSearchConfig(){
-		//intialise unitcell
-		//this.unitcell = new CellParameter();
-		
-		//Cant initialise
-		//Lattice latt = new Lattice(angleTol, angleTol, angleTol, angleTol, angleTol, angleTol, null);
-		//this.crytalSys = new Crystal();
-		//UnitCell genericUnit = new UnitCell(new Lattice.LatticeBuilder(1).build()); //Generic build
-		
-		//Generic crystal initialisation
-		//crystalSys = new Crystal(new Lattice.LatticeBuilder(1).build(), CrystalSystem.CUBIC);
 	}
 	
 	
@@ -150,13 +133,10 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 		setBetaVal(latt.getBe());
 		setGammaVal(latt.getGa());
 		
-		this.crystalSys = new Crystal(latt); //,this.crystalSys.getCrystalsystem());
+		this.crystalSys = new Crystal(latt); 
 	}
-	
-	
 	/*
-	 * 
-	 * TODO: just hacked bean together to interac twith unti cell system currently have. 
+	 * TODO: just hacked bean together to interact with unit cell system currently have. 
 	 * need to reconfigure view to match to the different value names
 	 * */
 	public void setAVal(double a){

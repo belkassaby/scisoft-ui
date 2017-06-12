@@ -47,7 +47,6 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.CCDCService;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.CellSearchManager;
-import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.GenericPowderIndexerEventExamples;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.jobs.CellSearchRun;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.listeners.ICellSearchListener;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.ICellSearchConfig;
@@ -56,16 +55,11 @@ import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.wizards.CellSearch
 
 import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Crystal;
 import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Lattice;
-import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.UnitCell;
 
 /**
  * 
- * 
- * 
- * 
  * TODO:viewer not clear the buttons I made...
- * 
- * TODO: grab the logs of the python to determine where the problem in the configuration lies
+ * TODO: grab the logs of the Python to determine where the problem in the configuration lies
  * 
  * @author Dean P. Ottewell
  *
@@ -73,7 +67,7 @@ import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.UnitCell;
 public class CellSearchWidget {
 	
 	private final Logger logger = LoggerFactory.getLogger(CellSearchWidget.class);
-	
+
 	private CellSearchManager manager;
 	private TableViewer viewer;
 	private List<TableViewerColumn> ret;
@@ -91,9 +85,8 @@ public class CellSearchWidget {
 	
 	public CellSearchWidget(CellSearchManager manager) {
 		this.manager = manager;
-		
 		//Force python configuration here
-//		CCDCService searchService = new CCDCService();
+		//CCDCService searchService = new CCDCService();
 		searcherStatus = true;//searchService.serverAvaliable();
 	}
 
