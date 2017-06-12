@@ -44,7 +44,7 @@ public class CellSearchConfigWizard extends WizardPage {
 		this.setControl(composite);
 	}
 	
-	@Override
+	@Override	
 	public void createControl(Composite parent) {		
 		dialogContainer = new Composite(parent, SWT.NONE);
 		dialogContainer.setLayout(new GridLayout(1, false));

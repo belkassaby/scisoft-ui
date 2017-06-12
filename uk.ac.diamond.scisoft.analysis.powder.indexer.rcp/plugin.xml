@@ -47,5 +47,16 @@
             name="Powder Indexer Preferences">
       </page>
    </extension>
+   <extension
+         point="org.eclipse.dawnsci.plotting.api.toolPage">
+      <plotting_tool_page
+            category="org.dawnsci.plotting.tools.category.Science"
+            class="uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.tools.PowderIndexerTool"
+            icon="icons/powderIndexing.png"
+            id="uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.tools.PowderIndexerTool"
+            label="Powder Indexing Tool"
+            tooltip="Open a view dedicated to x-ray powder analysis indexing routines">
+      </plotting_tool_page>
+   </extension>
 
 </plugin>

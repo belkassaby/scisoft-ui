@@ -211,6 +211,7 @@ public class ProgressIndexerRun implements IRunnableWithProgress {
 			// TODO: call upon the indexer process call separately
 			status = indexer.getStatus();
 			monitor.subTask(status);
+			
 			logger.info(status);
 			
 		}
