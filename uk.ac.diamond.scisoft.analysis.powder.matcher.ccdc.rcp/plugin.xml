@@ -17,13 +17,5 @@
             targetID="uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.PowderAnalysisPerspective">
       </perspectiveExtension>
    </extension>
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.PowderAnalysisPerspective"
-            id="uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.PowderAnalysisPerspective"
-            name="Powder Analysis Perspective">
-      </perspective>
-   </extension>
 
 </plugin>
