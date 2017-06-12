@@ -22,6 +22,7 @@ import org.eclipse.dawnsci.plotting.api.PlottingFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -58,7 +59,12 @@ public class GoldCalibrationPageThree extends CalibrationWizardPage {
 
 					@Override
 					public IStatus runInUIThread(IProgressMonitor monitor) {
+						Point point = getShell().getSize();
+						point.x = point.x + 1;
+						getShell().setSize(point);
+						getShell().layout();
 						getShell().redraw();
+						getShell().update();
 						getShell().pack(true);
 						return Status.OK_STATUS;
 					}
