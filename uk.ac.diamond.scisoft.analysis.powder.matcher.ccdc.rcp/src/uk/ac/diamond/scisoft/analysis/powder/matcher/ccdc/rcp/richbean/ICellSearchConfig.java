@@ -33,32 +33,5 @@ public interface ICellSearchConfig {
 	public void setPercentageLengthTol(double lengthTol);
 	public double getPercentageLengthTol();
 
-	public void setSearchCrysal(Crystal crystal);
-	public Crystal getSearchCrystal();
-	
-	public void setSearchLattice(Lattice latt);
-	public Lattice getLattice();
-
-	public void setUnitCell(UnitCell unitcell);
-	public UnitCell getUnitCell();
-	
-	public void setAVal(double a);
-	public double getAVal();
-	
-	public void setBVal(double b);
-	public double getBVal();
-	
-	public void setCVal(double c);
-	public double getCVal();
-	
-	public double getAlphaVal();
-	public void setAlphaVal(double alpha);
-	
-	public double getBetaVal();
-	public void setBetaVal(double beta);
-
-	public double getGammaVal();
-	public void setGammaVal(double gamma) ;
-	
 
 }

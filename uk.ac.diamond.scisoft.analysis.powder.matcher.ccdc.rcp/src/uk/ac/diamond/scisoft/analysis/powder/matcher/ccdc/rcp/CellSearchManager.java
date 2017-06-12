@@ -10,6 +10,7 @@ import uk.ac.diamond.scisoft.analysis.powder.indexer.indexers.CellParameter;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.CCDCService;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.listeners.ICellSearchListener;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.listeners.CellSearchConfigEvent;
+import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.CellSearchConfig;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.ICellSearchConfig;
 
 import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Crystal;
@@ -72,13 +73,13 @@ public class CellSearchManager {
 		}
 	}
 	
-	public void loadSearchMatches(List<ICellSearchConfig> matches){
+	public void loadSearchMatches(List<CellSearchConfig> matches){
 		for(ICellSearchListener listener : listeners) {
 			listener.loadSearchMatches(matches);
 		}
 	}
 	
-	public void loadSearchConfig(ICellSearchConfig searchConfig){
+	public void loadSearchConfig(CellSearchConfig searchConfig){
 		everythingChangesListeners(new CellSearchConfigEvent(this, searchConfig));
 	}
 	

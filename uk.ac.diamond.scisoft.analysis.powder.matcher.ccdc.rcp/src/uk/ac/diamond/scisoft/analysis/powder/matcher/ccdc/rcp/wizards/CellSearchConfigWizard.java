@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.CellSearchConfig;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.ICellSearchConfig;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.UnitCellConfigComp;
 
@@ -27,7 +28,7 @@ public class CellSearchConfigWizard extends WizardPage {
 	
 	private ICellSearchConfig configBean;
 	
-	IBeanController controller;
+	IBeanController manager;
 	UnitCellConfigComp cellView;
 	
 	public CellSearchConfigWizard(Composite parent, ICellSearchConfig configBean) {
@@ -55,7 +56,7 @@ public class CellSearchConfigWizard extends WizardPage {
 		
 		// Connect the UI and bean
 		//TODO: function which could throw a exception
-		controller = BeanService.getInstance().createController(cellView, configBean);
+		manager = BeanService.getInstance().createController(cellView, configBean);
 		
 		//Only do on finish now
 //		try {
@@ -78,26 +79,26 @@ public class CellSearchConfigWizard extends WizardPage {
 
 	
 	
-	public ICellSearchConfig gatherConfiguration() {
+	public CellSearchConfig gatherConfiguration() {
 		//Update on the current configuration of the bean
 		try {
-			controller.recordBeanFields();
-			controller.fireValueListeners();
-			controller.uiToBean();
-			controller.switchState(true);
+			manager.recordBeanFields();
+			manager.fireValueListeners();
+			manager.uiToBean();
+			manager.switchState(true);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-        return (ICellSearchConfig) controller.getBean();
+        return (CellSearchConfig) manager.getBean();
     }
 	
 	@Override
 	public boolean isPageComplete() {
 		try {
-			controller.beanToUI();
-			controller.switchState(true);
+			manager.beanToUI();
+			manager.switchState(true);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

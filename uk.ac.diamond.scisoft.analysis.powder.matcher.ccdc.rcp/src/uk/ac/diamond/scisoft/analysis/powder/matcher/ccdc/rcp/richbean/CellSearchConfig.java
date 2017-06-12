@@ -3,7 +3,6 @@ package uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean;
 import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Crystal;
 import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Lattice;
 import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.UnitCell;
-import uk.ac.diamond.scisoft.analysis.powder.indexer.indexers.CellInteraction;
 
 import java.io.Serializable;
 
@@ -15,7 +14,7 @@ import java.io.Serializable;
  * 
  * @author Dean P. Ottewell
  */
-public class CellSearchConfig extends CellInteraction implements ICellSearchConfig, Serializable{
+public class CellSearchConfig extends Lattice implements ICellSearchConfig, Serializable{
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -68,8 +67,15 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 	private Crystal crystalSys;
 	
 	public CellSearchConfig(){
+		//Default values
+		//Default lattice TODO: should be intialising to zero?
+		super(0.0, 0.0, 0.0, 90.0, 90.0, 90.0);
 	}
 	
+	//TODO: setting the rese tof the search parameters?
+	public CellSearchConfig(double a, double b, double c, double al, double be, double ga){
+		super(a, b, c, al, be, ga);
+	}
 	
 	public String getElements() {
 		return elements;
@@ -123,81 +129,7 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 	public void setSearchCrysal(Crystal crystal){
 		this.crystalSys = crystal;
 	}
-	
-	public void setSearchLattice(Lattice latt){
-		//this.latt = latt;
-		setAVal(latt.getA());
-		setBVal(latt.getB());
-		setCVal(latt.getC());
-		setAlphaVal(latt.getAl());
-		setBetaVal(latt.getBe());
-		setGammaVal(latt.getGa());
-		
-		this.crystalSys = new Crystal(latt); 
-	}
-	/*
-	 * TODO: just hacked bean together to interact with unit cell system currently have. 
-	 * need to reconfigure view to match to the different value names
-	 * */
-	public void setAVal(double a){
-		this.setA(a);
-	}
 
-	public double getAVal(){
-		return this.getA();
-	}
-	
-	public void setBVal(double b){
-		this.setB(b);
-	}	
-	public double getBVal(){
-		return this.getB();
-	}
-	
-	public void setCVal(double c){
-		this.setC(c);
-	}
-	public double getCVal(){
-		return this.getC();
-	}
-	
-	public double getAlphaVal() {
-		return this.getAl();
-	}
-	public void setAlphaVal(double alpha) {
-		this.setAl(alpha);
-	}
-	
-	public double getBetaVal() {
-		return this.getBe();
-	}
-	public void setBetaVal(double beta) {
-		this.setBe(beta);
-	}
-	
-	public double getGammaVal() {
-		return this.getGa();
-	}
-	public void setGammaVal(double gamma) {
-		this.setGa(gamma);
-	}
-	
-	@Override
-	public Crystal getSearchCrystal() {
-		return crystalSys;
-	}
-	
-	@Override
-	public void setUnitCell(UnitCell unitcell) {
-		//No unit cell generator for crystal. need to uniform this before decide the approach.
-		//Crystal crystal = new Crystal(lattice)
-	}
-	
-	@Override
-	public UnitCell getUnitCell() {
-		return crystalSys.getUnitCell();
-	}	
-	
 	public void setAbsoluteAngleTol(double angleTol) {
 		this.angleTol = angleTol;
 	}

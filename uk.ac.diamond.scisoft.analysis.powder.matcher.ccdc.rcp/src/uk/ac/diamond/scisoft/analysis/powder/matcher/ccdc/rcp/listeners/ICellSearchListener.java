@@ -2,6 +2,7 @@ package uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.listeners;
 import java.util.EventListener;
 import java.util.List;
 
+import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.CellSearchConfig;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.ICellSearchConfig;
 import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Crystal;
 /**
@@ -12,12 +13,12 @@ import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Crystal;
  */
 public interface ICellSearchListener extends EventListener {
 	
-	public void updateSearchConfig(ICellSearchConfig searchConfig);
+	public void updateSearchConfig(CellSearchConfig searchConfig);
 	
 	public void updateSearchCrystalConfig(Crystal searchCrystal);
 	
 	public void perfromSearch();
 	
-	public void loadSearchMatches(List<ICellSearchConfig> searchConfig);
+	public void loadSearchMatches(List<CellSearchConfig> searchConfig);
 	
 }
