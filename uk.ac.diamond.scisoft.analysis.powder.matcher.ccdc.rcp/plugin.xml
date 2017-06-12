@@ -17,5 +17,16 @@
             targetID="uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.PowderAnalysisPerspective">
       </perspectiveExtension>
    </extension>
+   <extension
+         point="org.eclipse.dawnsci.plotting.api.toolPage">
+      <plotting_tool_page
+            category="org.dawnsci.plotting.tools.category.Science"
+            class="uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.tools.CellSearcherTool"
+            icon="icons/cellSearch.png"
+            id="uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.tools.CellSearcherTool"
+            label="Powder Cell Searcher Tool"
+            tooltip="Open a view dedicated to x-ray powder unit searching  ">
+      </plotting_tool_page>
+   </extension>
 
 </plugin>

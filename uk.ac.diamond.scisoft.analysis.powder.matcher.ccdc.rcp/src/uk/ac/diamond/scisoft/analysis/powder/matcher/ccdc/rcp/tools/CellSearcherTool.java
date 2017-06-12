@@ -1,4 +1,4 @@
-package uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.tools;
+package uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.tools;
 
 import org.dawb.common.ui.widgets.ActionBarWrapper;
 import org.eclipse.dawnsci.plotting.api.tool.AbstractToolPage;
@@ -11,72 +11,68 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.IPageSite;
 
-import uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.PowderIndexerManager;
-import uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.views.CellParameterDelegate;
-import uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.views.PowderIndexerActions;
-import uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.views.PowderIndexerRoutineView;
-import uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.widget.PowderIndexerSetupWidget;
+import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.CellSearchManager;
+import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.views.CellSearchActions;
+import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.widgets.CellSearchWidget;
 
-public class PowderIndexerTool extends AbstractToolPage  {
+public class CellSearcherTool extends AbstractToolPage  {
+
+	private CellSearchManager manager; 
+	
+	private CellSearchWidget widget;
+	
+	private CellSearchActions actions;
 
 	// Page Components
 	private Composite composite;
-
-	private CellParameterDelegate cells;
-	
-	private PowderIndexerSetupWidget widget;
-	
-	private PowderIndexerActions actions;
-	
-	private PowderIndexerManager controller; 
 	
 	@Override
 	public ToolPageRole getToolPageRole() {
 		return ToolPageRole.ROLE_1D;
 	}
 
+
 	@Override
 	public Control getControl() {
-		return composite;
+		return this.composite;
 	}
-	
+
+	@Override
+	public void setFocus() {
+		// TODO Auto-generated method stub
+		this.composite.setFocus();
+	}
+
 	@Override
 	public void createControl(Composite parent) {
+		//TODO:Centerered blanket text arguing Unfortuantely Cell Searcher Service is not configured.
+		//Have some log... can narrow down where in the service is erroring? maybe even grey out until the ccdc is avalaible to generate as a tool optiton...
+		//Based on exceptions thrown in CCDCservice. iff problems exist
+		
 		this.composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		composite .setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		this.controller = new PowderIndexerManager();
+		manager = new CellSearchManager(); 
 
 		final IPageSite site = getSite();
 		IActionBars actionbars = site != null ? site.getActionBars() : generateActionBar(parent);
 		
-		actions = new PowderIndexerActions(controller);
+		actions = new CellSearchActions(manager);
 		actions.createActions(actionbars.getToolBarManager());
 		
-		cells = new CellParameterDelegate(controller);
-		cells.createControl(composite);
-		
-		widget = new PowderIndexerSetupWidget(controller); 
+		widget = new CellSearchWidget(manager);
 		widget.createControl(composite);
-
-		controller.setMainWidget(widget); //TODO: do want this back propagation
 		
 		super.createControl(parent);
 	}
 	
 	private ActionBarWrapper generateActionBar(Composite parent) {
 		ActionBarWrapper actionBarWrapper = null;
-		parent = new Composite(composite, SWT.RIGHT);
+		parent = new Composite(parent, SWT.RIGHT);
 		parent.setLayout(new GridLayout(1, false));
 		actionBarWrapper = ActionBarWrapper.createActionBars(parent, null);
 		actionBarWrapper.update(true);
 		return actionBarWrapper;
 	}
-
-	@Override
-	public void setFocus() {
-		this.composite.setFocus();
-	}
-
 }
