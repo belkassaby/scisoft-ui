@@ -107,7 +107,7 @@ public class JythonCreator implements IStartup {
 	/**
 	 * Name of interpreter that is set in the PyDev Jython Interpreter settings
 	 */
-	public static final String INTERPRETER_NAME = "Jython" + JythonPath.getJythonVersion();
+	public static final String INTERPRETER_NAME = "Jython" + JythonPath.getJythonMajorVersion();
 
 	/**
 	 * Boolean to set to true if running jython scripts that utilise ScisoftPy in IDE
