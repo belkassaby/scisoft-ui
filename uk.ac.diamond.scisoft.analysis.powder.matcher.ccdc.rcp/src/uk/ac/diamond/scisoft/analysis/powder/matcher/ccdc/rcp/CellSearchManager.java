@@ -47,7 +47,12 @@ public class CellSearchManager {
 	public void initialiseSearcher(){
 		searcher = new CCDCService();
 		
-		searcher.setUpServer();
+		try {
+			searcher.setUpServer();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		if(searcher.serverAvaliable()){
 			//Successfully available

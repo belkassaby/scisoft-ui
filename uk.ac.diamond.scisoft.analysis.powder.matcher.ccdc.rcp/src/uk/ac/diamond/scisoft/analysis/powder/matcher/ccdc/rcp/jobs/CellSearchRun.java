@@ -31,22 +31,37 @@ public class CellSearchRun implements IRunnableWithProgress {
 	public CellSearchRun(CellSearchManager manager, CellSearchConfig searchConfig) {
 		this.manager = manager;
 		this.searchConfig = searchConfig;
+
 	}
 
 	@Override
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException{
 
+		
+//		try {
+//			throw new Exception("Could not create python interpreter");
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			throw new InterruptedException("Could not create python interpreter");
+//		} //TODO: just throw this error inside the searcher 
+//			
+//			
 		monitor.beginTask("Connecting to ccdc serivce", IProgressMonitor.UNKNOWN);
 		CCDCService searchService = new CCDCService();
 		
 		monitor.beginTask("Setting up ccdc serivce", IProgressMonitor.UNKNOWN);
-		searchService.setUpServer();
+		try {
+			searchService.setUpServer();
+		} catch (Exception e) {
+			throw new InterruptedException(e.getMessage());
+		}
 		
 		if(searchService.serverAvaliable()){
 			monitor.beginTask("Establishing connection to CCDC service", IProgressMonitor.UNKNOWN);
 		} else {
 			monitor.subTask("Could not establish connection to CCDC service");
 			monitor.setCanceled(true);
+			//throw new InterruptedException("Could not establish a connection to CCDC service. "); grab the message from the searchservice right?
 		}
 		
 		monitor.beginTask("Running cell search procedure...", IProgressMonitor.UNKNOWN);

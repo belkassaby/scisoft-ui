@@ -33,7 +33,7 @@ public class CellSearchConfigWizard extends WizardPage {
 	
 	public CellSearchConfigWizard(Composite parent, ICellSearchConfig configBean) {
 		super("Configuration for cell search");
-		this.setDescription("Cell search configuration fo Cambridge Crystallographic Data Centre");
+		this.setDescription("Cell search configuration for Cambridge Crystallographic Data Centre");
 		this.setTitle("Cell Search Configuration");
 		
 		this.configBean = configBean;

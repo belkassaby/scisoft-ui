@@ -33,5 +33,5 @@ public interface ICellSearchConfig {
 	public void setPercentageLengthTol(double lengthTol);
 	public double getPercentageLengthTol();
 
-
+	public void setA(double a);
 }

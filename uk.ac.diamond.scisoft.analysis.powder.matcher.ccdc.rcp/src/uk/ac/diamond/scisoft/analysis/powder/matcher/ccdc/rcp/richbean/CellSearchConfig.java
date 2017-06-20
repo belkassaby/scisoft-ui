@@ -143,21 +143,53 @@ public class CellSearchConfig extends Lattice implements ICellSearchConfig, Seri
 		return lengthTol;
 	}
 	
+	double a;
+	public void setA(double a) {
+		this.a = a;
+	}
+	
+	double b;
+	public void setB(double b) {
+		this.b = b;
+	}
+
+	double c;
+	public void setC(double c) {
+		this.c = c;
+	}
+	
+	double al;
+	public void setAl(double al) {
+		this.al = al;
+	}
+
+	double be;
+	public void setBe(double be) {
+		this.be = be;
+	}
+
+	double ga;
+	public void setGa(double ga) {
+		this.ga = ga;
+	}
+	
+	
+	
+	
 	//TODO: better json format
 	@Override
 	public String toString(){
 		String format = "";
 		format +="Cell{";
 		
-		format += crystalSys.getUnitCell().getLattice().toString();
-//		format += "A:" +unitcell.getUnitA().toString()+ ",";
-//		format += "B:" +unitcell.getUnitB().toString()+ ",";
-//		format += "C:" +unitcell.getUnitC().toString()+ ",";
-//		
-//		format += "Alpha:" +unitcell.getAngleAlpha().toString()+ ",";
-//		format += "Beta:" +unitcell.getAngleBeta().toString() + ",";
-//		format += "Gamma:" +unitcell.getAngleGamma().toString()+ ",";
-//		
+		format += "A:" + Double.toString(a)+ ",";
+		format += "B:" + Double.toString(b)+ ",";
+		format += "C:" + Double.toString(c)+ ",";
+		
+		format += "Alpha:" + Double.toString(al)+ ",";
+		format += "Beta:" + Double.toString(be)+ ",";
+		format += "Gamma:" + Double.toString(ga)+ ",";
+		
 		format += "Angle Tol:" +Double.toString(angleTol)+ ",";
 		format += "Perecent Length Tol:" +Double.toString(lengthTol).toString()+",";;
 		

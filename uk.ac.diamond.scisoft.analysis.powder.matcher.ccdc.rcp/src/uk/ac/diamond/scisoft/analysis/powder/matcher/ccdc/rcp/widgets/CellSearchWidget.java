@@ -304,12 +304,16 @@ public class CellSearchWidget {
 		} catch (InvocationTargetException e1) {	
 			logger.error(e1.getMessage());
 			MessageDialog.openError(Display.getCurrent().getActiveShell(), "Cell Search Error", "An error occured during a search run!" + System.lineSeparator() +
-					"Check the data being configured is valid." + System.lineSeparator()
-					 + "Specific error :" + e1.getTargetException().getMessage());				
+					 "Specific error :" + e1.getMessage());
+			
 		} catch (InterruptedException e1) {
-			logger.error("Error running Job:" + e1.getMessage());
-		}
+			logger.error("Unconfigured Cell Searcher Job:" + e1.getMessage());
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Cell Searcher Confiugation", "An problem in cell searcher confgiuration has preventing the searcher from running" + System.lineSeparator() +
+					 "Problem Area:" + e1.getMessage());
+			
+		} 
 		//Should be able to just gather the results
+		//"Check the data being configured is valid." + System.lineSeparator()
 	}
 	
 	public void createTableControl(Composite parent) {
