@@ -25,22 +25,18 @@ public class PowderIndexerPreferenceInitializer extends AbstractPreferenceInitia
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		//TODO:Load in through constants...which in many ways is not a constant but the loading service... nice...
 		//TODO: were loading in them all... every param... are we okay? do we need to talk about this?
-		store.setDefault(PowderIndexerConstants.indexer, PowderIndexerConstants.INDEXERS.iterator().next());
+		store.setDefault(PowderIndexerConstants.selectedIndexer, PowderIndexerConstants.INDEXERS.iterator().next());
 		
-	    
-	    
 		//TODO:Just load in every params defaults
 		IPowderIndexerService powderIndexerFindServ = (IPowderIndexerService)Activator.getService(IPowderIndexerService.class);
 		
-		String tmpDir = System.getProperty("java.io.tmpdir");
-		
+
 		Iterator<String> powderIndexer = powderIndexerFindServ.getRegisteredIndexers().iterator();
 		while(powderIndexer.hasNext()){
 			String indexerID = powderIndexer.next();
 			
 			//The id will have the correpsonding path value for all indexers
-			store.setDefault(indexerID, tmpDir);
-			
+			store.setDefault(indexerID, PowderIndexerConstants.INDEXERDEFAULTDIRECTORY);
 			
 			Map<String, IPowderIndexerParam> powderIndexerParams = powderIndexerFindServ.getIndexerParameters(indexerID);
 			for (Entry<String, IPowderIndexerParam> powderIndexerParam : powderIndexerParams.entrySet()){
@@ -53,14 +49,14 @@ public class PowderIndexerPreferenceInitializer extends AbstractPreferenceInitia
 
 		
 		
-		store.setDefault(PowderIndexerConstants.cubicSearch, true);
-		store.setDefault(PowderIndexerConstants.monoclinicSearch, true);
-		store.setDefault(PowderIndexerConstants.orthorhombicSearch, true);
-		store.setDefault(PowderIndexerConstants.hexagonalSearch, true);
-		store.setDefault(PowderIndexerConstants.tetragonalSearch, true);
-		store.setDefault(PowderIndexerConstants.trigonalSearch, true);
-		store.setDefault(PowderIndexerConstants.hexagonalSearch, true);
-		store.setDefault(PowderIndexerConstants.triclinicSearch, false);
+		store.setDefault(PowderIndexerConstants.CUBICSEARCH, true);
+		store.setDefault(PowderIndexerConstants.MONOCLINICSEARCH, true);
+		store.setDefault(PowderIndexerConstants.ORTHORHOMBICSEARCH, true);
+		store.setDefault(PowderIndexerConstants.HEXAGONALSEARCH, true);
+		store.setDefault(PowderIndexerConstants.TETRAGONALSEARCH, true);
+		store.setDefault(PowderIndexerConstants.TRIGONALSEARCH, true);
+		store.setDefault(PowderIndexerConstants.HEXAGONALSEARCH, true);
+		store.setDefault(PowderIndexerConstants.TRICLINICSEARCH, false);
 		
 	}
 

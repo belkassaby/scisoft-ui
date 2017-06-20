@@ -1,5 +1,8 @@
 package uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.widget;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +16,8 @@ import org.eclipse.january.dataset.IDataset;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -37,7 +42,6 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.Activator;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.IdentifiedPeak;
 import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Crystal;
@@ -49,99 +53,98 @@ import uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.jobs.ProgressIndexerRun
 import uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.preferences.PowderIndexerConstants;
 
 /**
- * TODO the name left is only as reference that it'll be on the left
- * TODO: title grabber
+ * TODO the name left is only as reference that it'll be on the left TODO: title
+ * grabber
  * 
  * @author Dean P. Ottewell
  */
 public class PowderIndexerSetupWidget {
-	
+
 	private final Logger logger = LoggerFactory.getLogger(PowderIndexerSetupWidget.class);
 
 	private Button runIndexing;
-	
+
 	private PowderIndexerManager manager;
-	
+
 	private IDataset peakPos;
 
-	private Collection<String> indexersToRun; 
-	
+	private Collection<String> indexersToRun;
+
 	private Text maxABCTxt;
-	
+
 	private Label maxABCLb;
-	
+
 	private Text wavelengthTxt;
-	
+
 	private Text maximumVolumeTxt;
-	
+
 	private final String RUNINDEXINGTEXT = "Run Indexing";
-	
-	//TODO: put in preferences
+
+	// TODO: put in preferences
 	private Map<String, Boolean> shouldSearchSystems = new LinkedHashMap<String, Boolean>();
-	
-	
+
 	public PowderIndexerSetupWidget(PowderIndexerManager manager) {
 		this.manager = manager;
-		
+
 		indexersToRun = new ArrayList<String>();
-		
-		//TODO: change to preference setter
+
+		// TODO: change to preference setter
 		shouldSearchSystems.put(StandardConstantParameters.cubicSearch, true);
-		shouldSearchSystems.put(StandardConstantParameters.hexagonalSearch, true); 
-		shouldSearchSystems.put(StandardConstantParameters.trigonalSearch,true); 
-		shouldSearchSystems.put(StandardConstantParameters.tetragonalSearch, true);  
+		shouldSearchSystems.put(StandardConstantParameters.hexagonalSearch, true);
+		shouldSearchSystems.put(StandardConstantParameters.trigonalSearch, true);
+		shouldSearchSystems.put(StandardConstantParameters.tetragonalSearch, true);
 		shouldSearchSystems.put(StandardConstantParameters.orthorhombicSearch, true);
-		shouldSearchSystems.put(StandardConstantParameters.monoclinicSearch,true);
-		shouldSearchSystems.put(StandardConstantParameters.triclinicSearch, false); 
+		shouldSearchSystems.put(StandardConstantParameters.monoclinicSearch, true);
+		shouldSearchSystems.put(StandardConstantParameters.triclinicSearch, false);
 	}
 
 	public void createControl(final Composite left) {
-		
+
 		Composite comp = new Composite(left, SWT.NONE);
 		comp.setLayout(new GridLayout(1, true));
 		comp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
-		
 		BundleContext ctx = FrameworkUtil.getBundle(PowderIndexerSetupWidget.class).getBundleContext();
 		ServiceReference<EventAdmin> ref = ctx.getServiceReference(EventAdmin.class);
-		
+
 		EventHandler handler = new EventHandler() {
 			@Override
 			public void handleEvent(org.osgi.service.event.Event event) {
 				// TODO Auto-generated method stub
-				//TODO: thread because adding the data might take long. However, I am using this to send a class... event
+				// TODO: thread because adding the data might take long.
+				// However, I am using this to send a class... event
 				String[] theObjects = event.getPropertyNames();
-				
-				List<IdentifiedPeak> peaks =  (List<IdentifiedPeak>) event.getProperty("PEAKRESULTS");
+
+				List<IdentifiedPeak> peaks = (List<IdentifiedPeak>) event.getProperty("PEAKRESULTS");
 				manager.setPeakPosData(peaks);
-			} 	
+			}
 		};
 
-		Dictionary<String,Object> properties = new Hashtable<String, Object>();
+		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(EventConstants.EVENT_TOPIC, "peakfinding/*");
-		ctx.registerService(EventHandler.class, handler, properties);	
-		
+		ctx.registerService(EventHandler.class, handler, properties);
+
 		IPowderCellListener listener = new IPowderCellListener() {
 
 			@Override
 			public void theChosenIndexer(String indexerID) {
-				//TODO: grab the combo id
+				// TODO: grab the combo id
 			}
-			
+
 			@Override
 			public void isPowderSearching() {
 				// TODO Auto-generated method stub
 			}
-			
+
 			@Override
 			public void finishedSearching() {
-				// TODO Auto-generated method stub	
+				// TODO Auto-generated method stub
 			}
-	
+
 			@Override
 			public void peakDataChanged(IDataset nXData, IDataset nYData) {
 				peakPos = nXData;
-				if(canRunRoutine()){
+				if (canRunRoutine()) {
 					runIndexing.setEnabled(true);
 					runIndexing.setText(RUNINDEXINGTEXT);
 				}
@@ -158,84 +161,82 @@ public class PowderIndexerSetupWidget {
 			}
 		};
 		manager.addCellListener(listener);
-		
-		
+
 		Composite indexerConfiguration = new Composite(comp, SWT.NONE);
 		indexerConfiguration.setLayout(new GridLayout(2, false));
 		indexerConfiguration.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
-		
-		Group searchConfigLeft = new Group(indexerConfiguration , SWT.BORDER);
+
+		Group searchConfigLeft = new Group(indexerConfiguration, SWT.BORDER);
 		searchConfigLeft.setText(" Parameters ");
 		searchConfigLeft.setLayout(new GridLayout(2, false));
 		searchConfigLeft.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		searchConfigLeft.setBackground(left.getBackground()); 
-		
+		searchConfigLeft.setBackground(left.getBackground());
+
 		Label wavelengthLb = new Label(searchConfigLeft, SWT.NONE);
 		wavelengthLb.setText("Wavelength" + "/ \u212B");
 		wavelengthLb.setToolTipText("As shown by the second vertical line");
-		
-		wavelengthTxt = new Text(searchConfigLeft,  SWT.BORDER | SWT.RIGHT );
+
+		wavelengthTxt = new Text(searchConfigLeft, SWT.BORDER | SWT.RIGHT);
 		wavelengthTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		wavelengthTxt.addListener(SWT.Verify, verifyDouble);
 		wavelengthTxt.setText("1.560000");
-		
-		
+
 		Label maximumVolumelb = new Label(searchConfigLeft, SWT.NONE);
 		maximumVolumelb.setText("Maximum Volume" + " / \u212B" + "\u00B3");
-		
-		maximumVolumeTxt = new Text(searchConfigLeft,  SWT.BORDER  | SWT.RIGHT );
+
+		maximumVolumeTxt = new Text(searchConfigLeft, SWT.BORDER | SWT.RIGHT);
 		maximumVolumeTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		maximumVolumeTxt.addListener(SWT.Verify, verifyDouble);
-		
+
 		maximumVolumeTxt.setText("5000.000");
 		maximumVolumeTxt.setTextDirection(SWT.RIGHT_TO_LEFT);
-		
+
 		maxABCLb = new Label(searchConfigLeft, SWT.NONE);
 		maxABCLb.setText("Maximum a,b,c / \u212B");
-		
-		maxABCTxt = new Text(searchConfigLeft,  SWT.BORDER | SWT.RIGHT );
+
+		maxABCTxt = new Text(searchConfigLeft, SWT.BORDER | SWT.RIGHT);
 		maxABCTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		maxABCTxt.addListener(SWT.Verify, verifyDouble);
 		maxABCTxt.setText("35.000");
-		
+
 		Label minFigureMeritLb = new Label(searchConfigLeft, SWT.NONE);
 		minFigureMeritLb.setText("Minimum figure-of-merit");
-		
-		Text minFigureMeritTxt = new Text(searchConfigLeft,  SWT.BORDER | SWT.RIGHT );
+
+		Text minFigureMeritTxt = new Text(searchConfigLeft, SWT.BORDER | SWT.RIGHT);
 		minFigureMeritTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		minFigureMeritTxt.addListener(SWT.Verify, verifyDouble);
 		minFigureMeritTxt.setText("10.000");
-		
-		Label crystalSelectionLb= new Label(searchConfigLeft, SWT.NONE);
-		crystalSelectionLb.setText("Limit Crystal Searching");
-		
+
+		Label crystalSelectionLb = new Label(searchConfigLeft, SWT.NONE);
+		crystalSelectionLb.setText("Lattice");
+
 		Button crystalselectioBtn = new Button(searchConfigLeft, SWT.NONE);
 		crystalselectioBtn.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
 		crystalselectioBtn.setText("Selection");
 		crystalselectioBtn.addSelectionListener(new SelectionListener() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				//TODO: pass crystal data
-				CrystalSelectionDialog dialog = new CrystalSelectionDialog(comp.getShell(),shouldSearchSystems);
+				// TODO: pass crystal data
+				CrystalSelectionDialog dialog = new CrystalSelectionDialog(comp.getShell(), shouldSearchSystems);
 				dialog.open();
-				shouldSearchSystems  = dialog.getCrystalChoice().getSearchLimtiation();
+				shouldSearchSystems = dialog.getCrystalChoice().getSearchLimtiation();
 				manager.setCrystalSystemSearch(shouldSearchSystems);
 			}
-			
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// TODO Auto-generated method stub
 			}
 		});
-		
-		Group indexerSelectionRight = new Group(indexerConfiguration , SWT.V_SCROLL);
+
+		Group indexerSelectionRight = new Group(indexerConfiguration, SWT.V_SCROLL);
 		indexerSelectionRight.setText("  Indexing Routine  ");
 		indexerSelectionRight.setLayout(new GridLayout(2, false));
 		indexerSelectionRight.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false));
-		indexerSelectionRight.setBackground(left.getBackground()); 
-		
-		for(String id : PowderIndexerConstants.INDEXERS){
+		indexerSelectionRight.setBackground(left.getBackground());
+
+		for (String id : PowderIndexerConstants.INDEXERS) {
 			indexersToRun.add(id);
 			controlUseGenerator(indexerSelectionRight, id, true);
 			Label textLb = new Label(indexerSelectionRight, SWT.NONE);
@@ -243,97 +244,99 @@ public class PowderIndexerSetupWidget {
 			textLb.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false));
 		}
 
-		
 		indexerConfiguration.pack();
-		
+
 		runIndexing = new Button(comp, SWT.PUSH);
 		runIndexing.setText("Load peak position data");
 		runIndexing.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		runIndexing.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (peakPos == null){
+				if (peakPos == null) {
 					logger.error("no data to index!");
-					//TODO: generate a pop up to tell the user off!
+					// TODO: generate a pop up to tell the user off!
 				}
-				
-				//Load in the new configurations
+
+				// Load in the new configurations
 				manager.setWavelength(Double.parseDouble(wavelengthTxt.getText()));
 				manager.setMinFigureMerit(Double.parseDouble(minFigureMeritTxt.getText()));
 				manager.setMaxABC(Double.parseDouble(maxABCTxt.getText()));
 				manager.setMaximumVolume(Double.parseDouble(maximumVolumeTxt.getText()));
-				
-				ProgressMonitorDialog dia;// = new ProgressMonitorDialog(Display.getCurrent().getActiveShell());
-				
+
+				ProgressMonitorDialog dia;// = new
+											// ProgressMonitorDialog(Display.getCurrent().getActiveShell());
+
 				dia = new IndexerProgressDialog(Display.getCurrent().getActiveShell());
-				
-				
-				if (indexersToRun.size()!= 0 ){
+
+				if (indexersToRun.size() != 0) {
 					logger.error("no indexer to run!");
 				}
-				//TODO: properly choose a selection to run and iterate over all of them
-				for(String shouldRun : indexersToRun) {
-					
-						ProgressIndexerRun job = new ProgressIndexerRun(shouldRun, "tmptst", manager,peakPos);
-						
-						try {
-							dia.run(true, true, job);
-						
-						} catch (InvocationTargetException e1) {	
-							logger.error(e1.getMessage());
-							MessageDialog.openError(Display.getCurrent().getActiveShell(), "Peak indexing Error", "An error occured during auto indexing!" + System.lineSeparator() +
-									"Check the data being indexed is valid." + System.lineSeparator()
-									 + "Specific error :" + e1.getTargetException().getMessage());
-							
-						} catch (InterruptedException e1) {
-							logger.error("Error running Job:" + e1.getMessage());
-						}
+				// TODO: properly choose a selection to run and iterate over all
+				// of them
+				for (String shouldRun : indexersToRun) {
+
+					ProgressIndexerRun job = new ProgressIndexerRun(shouldRun, "tmptst", manager, peakPos);
+
+					try {
+						dia.run(true, true, job);
+
+					} catch (InvocationTargetException e1) {
+						logger.error(e1.getMessage());
+						MessageDialog.openError(Display.getCurrent().getActiveShell(), "Peak indexing Error",
+								"An error occured during auto indexing!" + System.lineSeparator()
+										+ "Check the data being indexed is valid." + System.lineSeparator()
+										+ "Specific error :" + e1.getTargetException().getMessage());
+
+					} catch (InterruptedException e1) {
+						logger.error("Error running Job:" + e1.getMessage());
+					}
 				}
-				
-				
-			}	
+
+			}
 		});
-		runIndexing.setEnabled(false); //Disabled until peak data loaded
+		runIndexing.setEnabled(false); // Disabled until peak data loaded
 	}
-	
-	//TODO: hacks, need to review my control generator use. Must be a generic version somewhere I call upon.
-	private Composite controlUseGenerator(Composite comp, String identifier, boolean isSelected){
+
+	// TODO: hacks, need to review my control generator use. Must be a generic
+	// version somewhere I call upon.
+	private Composite controlUseGenerator(Composite comp, String identifier, boolean isSelected) {
 		Button shouldSearch = new Button(comp, SWT.CHECK);
 		shouldSearch.setSelection(isSelected);
 		shouldSearch.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false));
 		shouldSearch.addSelectionListener(new SelectionListener() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
-				if(shouldSearch.getSelection()){
+
+				if (shouldSearch.getSelection()) {
 					indexersToRun.add(identifier);
-//					wavelengthVal.setEnabled(true);
-					
-					//Check if parameter is available, enable if not 
-//					IPowderIndexer indexer = PowderIndexerFactory.createIndexer(identifier);
-//					indexer.getInitialParamaters();
-//					
-					//TODO: check through parameters and see if matches are there
-					
-				} else { 
+					// wavelengthVal.setEnabled(true);
+
+					// Check if parameter is available, enable if not
+					// IPowderIndexer indexer =
+					// PowderIndexerFactory.createIndexer(identifier);
+					// indexer.getInitialParamaters();
+					//
+					// TODO: check through parameters and see if matches are
+					// there
+
+				} else {
 					indexersToRun.remove(identifier);
 				}
-				
+
 				runIndexing.setEnabled(canRunRoutine());
-					
+
 			}
-			
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 		return comp;
 	}
-	
-	
+
 	private Listener verifyDouble = new Listener() {
 
 		@Override
@@ -349,102 +352,11 @@ public class PowderIndexerSetupWidget {
 			}
 		}
 	};
-	
-	private Boolean canRunRoutine(){
-		return 	(indexersToRun.size() >= 1 && peakPos != null);
+
+	private Boolean canRunRoutine() {
+		return (indexersToRun.size() >= 1 && peakPos != null);
 	}
-	
+
 }
 
-class IndexerProgressDialog extends ProgressMonitorDialog {
 
-	private Text outputArea; 
-	
-	public IndexerProgressDialog(Shell parent) {
-		super(parent);
-	}
-
-	
-//	@Override
-//	protected Image getImage() {
-//		Image icon = Activator.getImage("icons/powderIndexing.png");
-//		//Maginfiy
-//		icon.getImageData().scaledTo(1000, 1000);
-//		return icon;
-//	}
-	
-	@Override
-	protected void finishedRun() {
-		// TODO Auto-generated method stub
-		//Do not close but change the button
-		Button cancel = getCancelButton();
-		cancel.setText("Finish");
-		//super.finishedRun();
-	}
-	
-	@Override
-	protected void okPressed() {
-		// TODO Auto-generated method stub
-		super.okPressed();
-	}
-	
-	@Override
-	protected void cancelPressed() {
-		decrementNestingDepth(); //TODO: this will break things
-		super.cancelPressed();
-	}
-	
-	
-	
-	@Override
-	protected Control createContents(Composite parent) {
-		this.getShell().setText("Determining Structure");
-		this.getShell().setImage( Activator.getImage("icons/powderIndexing.png"));
-		
-		super.createContents(parent);
-		
-		return parent;
-	}
-	
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		
-		super.createDialogArea(parent);
-		
-		
-////		
-////		Composite composite = new Composite(parent,SWT.BORDER);
-////		composite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true));
-////		
-//		this.outputArea = new Text(parent, SWT.V_SCROLL);
-//		
-//		GridData gd = new GridData();
-//		gd.horizontalAlignment = GridData.FILL;
-////		/gd.grabExcessHorizontalSpace = true;
-//		gd.horizontalSpan = 2;
-//		// label showing current task
-//		gd = new GridData(GridData.FILL_BOTH);
-//		gd.horizontalSpan = 2;
-//		
-////		outputArea.setLayoutData(gd);
-////		outputArea.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
-////		outputArea.setText("MESSAGE STREAM: ");
-////		outputArea.setEditable(false);
-		
-		return parent;
-	}
-	
-	
-	
-//	
-//	private class CustomLabel extends Label {
-//		public CustomLabel(Composite parent, int style) {
-//			super(parent, style);
-//		}
-//	}
-	
-	private void streamLog(String message){
-		outputArea.setText(message);
-		outputArea.update();
-	}
-}

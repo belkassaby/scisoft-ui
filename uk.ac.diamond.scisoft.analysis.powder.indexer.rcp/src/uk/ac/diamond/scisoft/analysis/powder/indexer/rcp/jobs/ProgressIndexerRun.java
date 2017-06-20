@@ -49,10 +49,8 @@ public class ProgressIndexerRun implements IRunnableWithProgress {
 		//TODO: Shouldn't really do this as I need the parameters
 		this.indexer = PowderIndexerFactory.createIndexer(ID_indexer);
 		//TODO: then load standard parameters or check here?...
-		
 		//this.indexer.setOutFileTitle(title);
 		this.peakData = peakPositions;
-		
 		
 	}
 
