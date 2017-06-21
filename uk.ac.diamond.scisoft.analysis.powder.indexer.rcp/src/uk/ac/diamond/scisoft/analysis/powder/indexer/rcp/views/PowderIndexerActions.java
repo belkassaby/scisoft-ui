@@ -24,7 +24,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 
 import uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.Activator;
-import uk.ac.diamond.scisoft.analysis.powder.indexer.indexers.CellInteraction;
 import uk.ac.diamond.scisoft.analysis.powder.indexer.indexers.CellParameter;
 import uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.IPowderCellListener;
 import uk.ac.diamond.scisoft.analysis.powder.indexer.rcp.PowderIndexerManager;
@@ -156,12 +155,13 @@ public class PowderIndexerActions {
 		 * */
 		
 		CellParameter cellInteract = cells.get(0);
-		
 		//Crystal cell =new Crystal(new Lattice.LatticeBuilder(1).build(), CrystalSystem.CUBIC); 
-		Crystal cell = cellInteract.getSearchCrystal();
+		//Crystal cell = cellInteract.getCrystalSystem();
+		
 		
 		//TODO: where to put this trigger line?
-	    properties.put("INDEXERRESULTS", cell);
+		//TODO: after lattice cast
+	    properties.put("INDEXERRESULTS", cellInteract);
 	    
 	    //Going to be triggered on a button and would like to know its arrived. However, should check before beforeing this action the 
 	    //view is active... If thats the case maybe based to have it async...

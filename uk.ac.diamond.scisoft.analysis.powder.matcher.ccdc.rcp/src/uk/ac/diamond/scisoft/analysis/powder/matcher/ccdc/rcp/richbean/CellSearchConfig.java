@@ -3,7 +3,6 @@ package uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean;
 import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Crystal;
 import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Lattice;
 import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.UnitCell;
-import uk.ac.diamond.scisoft.analysis.powder.indexer.indexers.CellInteraction;
 
 import java.io.Serializable;
 
@@ -15,11 +14,11 @@ import java.io.Serializable;
  * 
  * @author Dean P. Ottewell
  */
-public class CellSearchConfig extends CellInteraction implements ICellSearchConfig, Serializable{
+public class CellSearchConfig extends Lattice implements ICellSearchConfig, Serializable{
 	
 	@Override
 	public boolean equals(Object obj) {
-		//TODO:
+		//TODO:does it matter though...
 		return true;
 	}	
 	@Override
@@ -30,8 +29,6 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 		//TODO: complete with reset of values
 		return result;
 	}
-	
-	//CellParameter
 	
 	/**
 	 * Must implement clear() method on beans being used with BeanUI.
@@ -47,9 +44,6 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 		this.crystalSys = null;
 	}
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private String elements;
@@ -69,24 +63,23 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 	private Double angleTol;
 	
 	//TODO: keep cell parameter? has merit and just wrap this around crystal
-	//private CellParameter unitcell;
-
 	
 	private Crystal crystalSys;
 	
 	public CellSearchConfig(){
-		//intialise unitcell
-		//this.unitcell = new CellParameter();
-		
-		//Cant initialise
-		//Lattice latt = new Lattice(angleTol, angleTol, angleTol, angleTol, angleTol, angleTol, null);
-		//this.crytalSys = new Crystal();
-		//UnitCell genericUnit = new UnitCell(new Lattice.LatticeBuilder(1).build()); //Generic build
-		
-		//Generic crystal initialisation
-		//crystalSys = new Crystal(new Lattice.LatticeBuilder(1).build(), CrystalSystem.CUBIC);
+		//Default values
+		//Default lattice TODO: should be intialising to zero?
+		super(0.0, 0.0, 0.0, 90.0, 90.0, 90.0);
 	}
 	
+	//TODO: setting the rese tof the search parameters?
+	public CellSearchConfig(double a, double b, double c, double al, double be, double ga){
+		super(a, b, c, al, be, ga);
+	}
+	
+	public CellSearchConfig(Lattice latt) {
+		super(latt.getA(), latt.getB(), latt.getC(), latt.getAl(), latt.getBe(), latt.getGa());
+	}
 	
 	public String getElements() {
 		return elements;
@@ -137,87 +130,6 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 		this.chemicalName = associateName;
 	}
 
-	public void setSearchCrysal(Crystal crystal){
-		this.crystalSys = crystal;
-	}
-	
-	public void setSearchLattice(Lattice latt){
-		//this.latt = latt;
-		setAVal(latt.getA());
-		setBVal(latt.getB());
-		setCVal(latt.getC());
-		setAlphaVal(latt.getAl());
-		setBetaVal(latt.getBe());
-		setGammaVal(latt.getGa());
-		
-		this.crystalSys = new Crystal(latt); //,this.crystalSys.getCrystalsystem());
-	}
-	
-	
-	/*
-	 * 
-	 * TODO: just hacked bean together to interac twith unti cell system currently have. 
-	 * need to reconfigure view to match to the different value names
-	 * */
-	public void setAVal(double a){
-		this.setA(a);
-	}
-
-	public double getAVal(){
-		return this.getA();
-	}
-	
-	public void setBVal(double b){
-		this.setB(b);
-	}	
-	public double getBVal(){
-		return this.getB();
-	}
-	
-	public void setCVal(double c){
-		this.setC(c);
-	}
-	public double getCVal(){
-		return this.getC();
-	}
-	
-	public double getAlphaVal() {
-		return this.getAl();
-	}
-	public void setAlphaVal(double alpha) {
-		this.setAl(alpha);
-	}
-	
-	public double getBetaVal() {
-		return this.getBe();
-	}
-	public void setBetaVal(double beta) {
-		this.setBe(beta);
-	}
-	
-	public double getGammaVal() {
-		return this.getGa();
-	}
-	public void setGammaVal(double gamma) {
-		this.setGa(gamma);
-	}
-	
-	@Override
-	public Crystal getSearchCrystal() {
-		return crystalSys;
-	}
-	
-	@Override
-	public void setUnitCell(UnitCell unitcell) {
-		//No unit cell generator for crystal. need to uniform this before decide the approach.
-		//Crystal crystal = new Crystal(lattice)
-	}
-	
-	@Override
-	public UnitCell getUnitCell() {
-		return crystalSys.getUnitCell();
-	}	
-	
 	public void setAbsoluteAngleTol(double angleTol) {
 		this.angleTol = angleTol;
 	}
@@ -231,21 +143,53 @@ public class CellSearchConfig extends CellInteraction implements ICellSearchConf
 		return lengthTol;
 	}
 	
+	double a;
+	public void setA(double a) {
+		this.a = a;
+	}
+	
+	double b;
+	public void setB(double b) {
+		this.b = b;
+	}
+
+	double c;
+	public void setC(double c) {
+		this.c = c;
+	}
+	
+	double al;
+	public void setAl(double al) {
+		this.al = al;
+	}
+
+	double be;
+	public void setBe(double be) {
+		this.be = be;
+	}
+
+	double ga;
+	public void setGa(double ga) {
+		this.ga = ga;
+	}
+	
+	
+	
+	
 	//TODO: better json format
 	@Override
 	public String toString(){
 		String format = "";
 		format +="Cell{";
 		
-		format += crystalSys.getUnitCell().getLattice().toString();
-//		format += "A:" +unitcell.getUnitA().toString()+ ",";
-//		format += "B:" +unitcell.getUnitB().toString()+ ",";
-//		format += "C:" +unitcell.getUnitC().toString()+ ",";
-//		
-//		format += "Alpha:" +unitcell.getAngleAlpha().toString()+ ",";
-//		format += "Beta:" +unitcell.getAngleBeta().toString() + ",";
-//		format += "Gamma:" +unitcell.getAngleGamma().toString()+ ",";
-//		
+		format += "A:" + Double.toString(a)+ ",";
+		format += "B:" + Double.toString(b)+ ",";
+		format += "C:" + Double.toString(c)+ ",";
+		
+		format += "Alpha:" + Double.toString(al)+ ",";
+		format += "Beta:" + Double.toString(be)+ ",";
+		format += "Gamma:" + Double.toString(ga)+ ",";
+		
 		format += "Angle Tol:" +Double.toString(angleTol)+ ",";
 		format += "Perecent Length Tol:" +Double.toString(lengthTol).toString()+",";;
 		

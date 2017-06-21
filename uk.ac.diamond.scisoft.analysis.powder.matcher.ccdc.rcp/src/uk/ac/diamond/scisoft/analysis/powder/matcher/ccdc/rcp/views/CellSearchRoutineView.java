@@ -33,9 +33,7 @@ public class CellSearchRoutineView extends ViewPart {
 		
 		//TODO:Centerered blanket text arguing Unfortuantely Cell Searcher Service is not configured.
 		//Have some log... can narrow down where in the service is erroring?
-		//Based on exceptions thrown in CCDCservice.
-		//If problems exist 
-		
+		//Based on exceptions thrown in CCDCservice. iff problems exist 
 		
 		final Composite content = new Composite(parent, SWT.NONE);
 		content.setLayout(new GridLayout(1, false));

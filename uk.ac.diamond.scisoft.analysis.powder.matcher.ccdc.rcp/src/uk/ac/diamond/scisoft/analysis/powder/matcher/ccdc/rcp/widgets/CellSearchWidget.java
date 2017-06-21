@@ -1,6 +1,5 @@
 package uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.widgets;
 
-import java.awt.Checkbox;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -9,7 +8,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jface.dialogs.DialogMessageArea;
 import org.eclipse.jface.dialogs.IconAndMessageDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -47,7 +45,6 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.CCDCService;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.CellSearchManager;
-import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.GenericPowderIndexerEventExamples;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.jobs.CellSearchRun;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.listeners.ICellSearchListener;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.ICellSearchConfig;
@@ -56,16 +53,11 @@ import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.wizards.CellSearch
 
 import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Crystal;
 import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Lattice;
-import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.UnitCell;
 
 /**
  * 
- * 
- * 
- * 
  * TODO:viewer not clear the buttons I made...
- * 
- * TODO: grab the logs of the python to determine where the problem in the configuration lies
+ * TODO: grab the logs of the Python to determine where the problem in the configuration lies
  * 
  * @author Dean P. Ottewell
  *
@@ -73,13 +65,13 @@ import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.UnitCell;
 public class CellSearchWidget {
 	
 	private final Logger logger = LoggerFactory.getLogger(CellSearchWidget.class);
-	
+
 	private CellSearchManager manager;
 	private TableViewer viewer;
 	private List<TableViewerColumn> ret;
-	private ICellSearchConfig sConfig;
+	private CellSearchConfig sConfig;
 	
-	private List<ICellSearchConfig> searchMatches;
+	private List<CellSearchConfig> searchMatches;
 	
 	//Buttons
 	Button runSearch;
@@ -91,9 +83,8 @@ public class CellSearchWidget {
 	
 	public CellSearchWidget(CellSearchManager manager) {
 		this.manager = manager;
-		
 		//Force python configuration here
-//		CCDCService searchService = new CCDCService();
+		//CCDCService searchService = new CCDCService();
 		searcherStatus = true;//searchService.serverAvaliable();
 	}
 
@@ -113,21 +104,22 @@ public class CellSearchWidget {
 				
 				Object obj = event.getProperty("INDEXERRESULTS");
 				
-				Crystal receiveObj = (Crystal) event.getProperty("INDEXERRESULTS");
+				Lattice receiveLattice = (Lattice) event.getProperty("INDEXERRESULTS");
 				
-				if(receiveObj != null) {
-					CellSearchConfig configBean = new CellSearchConfig();
-					configBean.setSearchCrysal(receiveObj);
+				if(receiveLattice != null) {
+					CellSearchConfig configBean = new CellSearchConfig(receiveLattice);
+					
+					
+					//Setting everything to prevent a complain
 					configBean.setElements("H"); //TODO:Open elements table for this
 					configBean.setRefcode("ARAVIZ");
 					configBean.setFormula("Y1 3+,3(H4 B1 1-)");
 					configBean.setSpacegroup("Pm-3m");
 					configBean.setChemicalName("Yttrium tris(tetrahydridoborate");
 					
-					//Setting everything to prevent a complain
 					configBean.setAbsoluteAngleTol(1);
 					configBean.setPercentageLengthTol(1);
-					
+
 					configBean.setCcdcNum("0x");
 					
 					sConfig = configBean;
@@ -155,20 +147,8 @@ public class CellSearchWidget {
 				
 					/*TMP DEFAULT SET*/
 					// Tmp: Set some initial values. Theses values match perfectly to ARAVIZ silcon sample
-					CellSearchConfig configBean = new CellSearchConfig();
-//					CellParameter tmpCell = new CellParameter();
-//					tmpCell.setUnitA(5.4767);
-//					tmpCell.setUnitB(5.4767);
-//					tmpCell.setUnitC(5.4767);
-//					tmpCell.setAngleAlpha(90.0);
-//					tmpCell.setAngleBeta(90.0);
-//					tmpCell.setAngleGamma(90.0);
-//					
-//					configBean.setUnitcell(tmpCell);
-					//Lattice latt = new Lattice.LatticeBuilder(5.4767).setB(5.4767).setC(5.4767).setA(90.0).setBe(90.0).setGa(90.0).build();
-					Lattice latt = new Lattice(5.4767, 5.4767, 5.4767, 90.0, 90.0, 90.0);
-					configBean.setSearchLattice(latt);
-					
+					CellSearchConfig configBean = new CellSearchConfig(5.4767, 5.4767, 5.4767, 90.0, 90.0, 90.0);
+
 					configBean.setElements("H"); //TODO:Open elements table for this
 					configBean.setRefcode("ARAVIZ");
 					configBean.setFormula("Y1 3+,3(H4 B1 1-)");
@@ -191,7 +171,7 @@ public class CellSearchWidget {
 					@Override
 					public boolean performFinish() {
 						CellSearchConfigWizard configPage = (CellSearchConfigWizard) this.getStartingPage();
-						ICellSearchConfig configBean = configPage.gatherConfiguration();
+						CellSearchConfig configBean = configPage.gatherConfiguration();
 						//Alert of the new search configuration parameter
 						manager.loadSearchConfig(configBean);
 						
@@ -239,41 +219,7 @@ public class CellSearchWidget {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				//TODO: save all those that are checked
-			
-//				TableItem[] items = viewer.getTable().getItems();
-//				
-//				CellEditor[] editors = (CellEditor[]) viewer.getCellEditors();
-//				
-//				
-//				TableViewerColumn checker = ret.get(ret.size()-1);
-//				String testTmp = checker.getColumn().getText();
-//				
-//				for (TableItem item : items){
-//					
-//					//Grab last co umn 
-//					String checkVal = item.getText(8);//viewer.getTable().getColumnCount());
-//					boolean testCheck= item.getChecked();
-//					
-//					
-//					
-////					CellLabelProvider labTmp = viewer.getLabelProvider(7);
-////					
-////					CellLabelProvider lab = viewer.getLabelProvider(7);
-////					
-////					CheckerLabelProvider checkerLab = (CheckerLabelProvider) viewer.getLabelProvider(7);
-////					
-////					Object Data = item.getData();
-////
-////					Button checker = checkerLab.buttons.get(Data);
-//					
-//					//table.setLabelProvider(new ColumnLabelProvider() {
-//					
-//					
-//					
-//					Object test =item.getText();
-//					
-//				}
-//				
+
 				CCDCService searchService = new CCDCService();
 				
 				List<ICellSearchConfig> cellsConfig= (List<ICellSearchConfig>) viewer.getInput();
@@ -285,8 +231,7 @@ public class CellSearchWidget {
 					searchService.generateRefcodeCif("/tmp/", cell.getRefcode());
 					
 				}
-				
-				//searchService.generateRefcodeCif("/tmp/", refcode);
+
 			}	
 		});
 		saveCif.setEnabled(false); //Disabled until peak data loaded
@@ -296,7 +241,7 @@ public class CellSearchWidget {
 		ICellSearchListener listener = new ICellSearchListener() {
 			
 			@Override
-			public void updateSearchConfig(ICellSearchConfig searchConfig) {
+			public void updateSearchConfig(CellSearchConfig searchConfig) {
 				sConfig = searchConfig;
 				runSearch.setEnabled(true);
 				saveCif.setEnabled(true);
@@ -308,7 +253,7 @@ public class CellSearchWidget {
 			}
 
 			@Override
-			public void loadSearchMatches(List<ICellSearchConfig> searchConfig) {
+			public void loadSearchMatches(List<CellSearchConfig> searchConfig) {
 				searchMatches = searchConfig;
 				
 				viewer.refresh();
@@ -323,7 +268,7 @@ public class CellSearchWidget {
 
 			@Override
 			public void updateSearchCrystalConfig(Crystal searchCrystal) {
-				sConfig.setSearchCrysal(searchCrystal);
+				//sConfig.setSearchCrysal(searchCrystal);
 			}
 		};
 		
@@ -359,12 +304,16 @@ public class CellSearchWidget {
 		} catch (InvocationTargetException e1) {	
 			logger.error(e1.getMessage());
 			MessageDialog.openError(Display.getCurrent().getActiveShell(), "Cell Search Error", "An error occured during a search run!" + System.lineSeparator() +
-					"Check the data being configured is valid." + System.lineSeparator()
-					 + "Specific error :" + e1.getTargetException().getMessage());				
+					 "Specific error :" + e1.getMessage());
+			
 		} catch (InterruptedException e1) {
-			logger.error("Error running Job:" + e1.getMessage());
-		}
+			logger.error("Unconfigured Cell Searcher Job:" + e1.getMessage());
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Cell Searcher Confiugation", "An problem in cell searcher confgiuration has preventing the searcher from running" + System.lineSeparator() +
+					 "Problem Area:" + e1.getMessage());
+			
+		} 
 		//Should be able to just gather the results
+		//"Check the data being configured is valid." + System.lineSeparator()
 	}
 	
 	public void createTableControl(Composite parent) {
@@ -380,7 +329,7 @@ public class CellSearchWidget {
 		//TODO: data content
 		//viewer.setInput(manager.getCellData());
 		//manager.setResultsView(viewer);
-		
+
 		viewer.refresh();
 	}
 	
@@ -461,7 +410,7 @@ public class CellSearchWidget {
 			@Override
 			public String getText(Object element) {
 				CellSearchConfig cell = (CellSearchConfig) element;
-				double a = cell.getAVal();
+				double a = cell.getA();
 				return String.valueOf(a);
 			}
 		});
@@ -474,7 +423,7 @@ public class CellSearchWidget {
 			@Override
 			public String getText(Object element) {
 				CellSearchConfig cell = (CellSearchConfig) element;
-				return String.valueOf(cell.getBVal());
+				return String.valueOf(cell.getB());
 			}
 		});
 		ret.add(table);
@@ -487,7 +436,7 @@ public class CellSearchWidget {
 			@Override
 			public String getText(Object element) {
 				CellSearchConfig cell = (CellSearchConfig) element;
-				return String.valueOf(cell.getCVal());
+				return String.valueOf(cell.getC());
 			}
 		});
 		ret.add(table);
@@ -500,7 +449,7 @@ public class CellSearchWidget {
 			@Override
 			public String getText(Object element) {
 				CellSearchConfig cell = (CellSearchConfig) element;
-				return String.valueOf(cell.getAlphaVal());
+				return String.valueOf(cell.getAl());
 			}
 		});
 	
@@ -514,7 +463,7 @@ public class CellSearchWidget {
 			@Override
 			public String getText(Object element) {
 				CellSearchConfig cell = (CellSearchConfig) element;
-				return String.valueOf(cell.getBetaVal());
+				return String.valueOf(cell.getBe());
 			}
 		});
 		ret.add(table);
@@ -527,7 +476,7 @@ public class CellSearchWidget {
 			@Override
 			public String getText(Object element) {
 				CellSearchConfig cell = (CellSearchConfig) element;
-				return String.valueOf(cell.getGammaVal());
+				return String.valueOf(cell.getGa());
 			}
 		});
 		ret.add(table);
@@ -575,7 +524,6 @@ public class CellSearchWidget {
         	    public void widgetSelected(SelectionEvent e)
         	    {
         	    	cell.setText(Boolean.toString(button.getSelection()));
-        	    	
         	    }
         	});
         	     	

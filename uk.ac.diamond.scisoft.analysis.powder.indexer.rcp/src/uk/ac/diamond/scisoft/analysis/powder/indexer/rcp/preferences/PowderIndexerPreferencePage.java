@@ -70,7 +70,10 @@ public class PowderIndexerPreferencePage extends PreferencePage implements IWork
 
 	@Override
 	protected void performDefaults() {
-		getPreferenceStore().setDefault(PowderIndexerConstants.indexer, PowderIndexerConstants.INDEXERS.iterator().next());
+		
+		//getPreferenceStore().setDefault(PowderIndexerConstants.indexer, PowderIndexerConstants.INDEXERS.iterator().next());
+		
+		getPreferenceStore().setDefault(PowderIndexerConstants.selectedIndexer, PowderIndexerConstants.INDEXERDEFAULTDIRECTORY);
 		
 		//TODO: iterate over all intial parameters
 		for(String id : PowderIndexerConstants.INDEXERS){
@@ -87,7 +90,7 @@ public class PowderIndexerPreferencePage extends PreferencePage implements IWork
 		//Should set the current indexer to have the subsequent indexerdirectory
 		String directory = directorySelector.getText();
 		String selectedIndexer = indexerCombo.getText();
-		getPreferenceStore().setValue(selectedIndexer, directory );
+		getPreferenceStore().setValue(selectedIndexer, directory);
 		
 		
 		
@@ -139,8 +142,9 @@ public class PowderIndexerPreferencePage extends PreferencePage implements IWork
 				 * Load Indexer Parameters
 				 * 
 				 * */
-
+				
 				loadPowderIndexer(specificIndexerParams);
+				directorySelector.setText(indexerDirectory);
 				//specificFinderSetting.redraw();
 				//specificFinderSetting.pack();
 				comp.update();
@@ -150,14 +154,12 @@ public class PowderIndexerPreferencePage extends PreferencePage implements IWork
 			}
 		});
 		
-		getPreferenceStore().getString(PowderIndexerConstants.indexer);
-		
 		//Needed to initialise this primitively because load in services	
 		Iterator<String> itr = PowderIndexerConstants.INDEXERS.iterator();
 		while(itr.hasNext()){
 			indexerCombo.add(itr.next());
 		}
-		indexerCombo.select(0);
+	
 
 		
 		
@@ -178,6 +180,9 @@ public class PowderIndexerPreferencePage extends PreferencePage implements IWork
 		String[] files = new String[] {"All Files"};
 		String[] extensions = null;
 	    
+
+//		if indexerDirectory.isEmpty() getPreferenceStore().setDefault(owderIndexerConstants.indexer, PowderIndexerConstants.INDEXERDEFAULTDIRECTORY);
+//		
 	    directorySelector = new SelectorWidget(locationComp, isFolderSelector, hasResourceButton, files, extensions){
 			
 			@Override
@@ -198,14 +203,21 @@ public class PowderIndexerPreferencePage extends PreferencePage implements IWork
 		directorySelector.setText(indexerDirectory);		
 		
 		
+		
+		
+		
+		indexerCombo.select(0);
 		specificIndexerParams.layout();
-    	
+		
+		
+		
 		return comp;
 	}
 	
 	private void loadPowderIndexer(Group specificFinderSetting){
 		String currPowderIndexerID = indexerCombo.getText();
-		getPreferenceStore().setValue(PowderIndexerConstants.indexer, currPowderIndexerID);
+		indexerDirectory = getPreferenceStore().getString(currPowderIndexerID);
+		getPreferenceStore().setValue(PowderIndexerConstants.selectedIndexer, currPowderIndexerID);
 		//TODO: store params as constnats?
 		IPowderIndexerService powderIndexerServ = (IPowderIndexerService)Activator.getService(IPowderIndexerService.class);
 		Map<String, IPowderIndexerParam> powderIndexerParams = powderIndexerServ.getIndexerParameters(currPowderIndexerID);

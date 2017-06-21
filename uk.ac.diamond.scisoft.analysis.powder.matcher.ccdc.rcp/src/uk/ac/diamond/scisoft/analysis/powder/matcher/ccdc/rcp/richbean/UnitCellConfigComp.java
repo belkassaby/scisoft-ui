@@ -17,7 +17,9 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * Composite setup for cell conifg
- * 	TODO: check the invlaid entries for parameters such as element limit choice and ccdcNum limit size 
+ * 	TODO: check the invalid entries for parameters such as element limit choice and ccdcNum limit size
+ *  TODO: what default paramters sould be set?
+ *   
  * @author Dean P. Ottewell
  */
 public class UnitCellConfigComp extends Composite {
@@ -185,9 +187,6 @@ public class UnitCellConfigComp extends Composite {
 		this.lengthTol = new TextFieldDecorator(lengthTolTxt, lengthTolBounds);
 		controlUseGenerator(comp, lengthTol,false);
 		lengthTolTxt.setEnabled(false);
-
-		
-		
 		
 		//RegexDecorator based on elements
 		//Search Configuration
@@ -295,7 +294,7 @@ public class UnitCellConfigComp extends Composite {
 	
 	//Cell Configuration
 	
-	public IFieldWidget getAVal() {
+	public IFieldWidget getA() {
 		//TODO: the method to only get values if they are actively checked
 		//Really just want to return do not change
 		if(!aVal.isOn()){
@@ -308,7 +307,7 @@ public class UnitCellConfigComp extends Composite {
 		return aVal;
 	}
 	
-	public IFieldWidget getBVal() {
+	public IFieldWidget getB() {
 		if(!bVal.isOn()){
 			double valDefault = 5.4311946;
 			bVal.setValue(valDefault);
@@ -318,20 +317,18 @@ public class UnitCellConfigComp extends Composite {
 		return bVal;
 	}
 	
-	public IFieldWidget getCVal() {
+	public IFieldWidget getC() {
 		if(!cVal.isOn()){
 			double valDefault = 5.4311946;
 			cVal.setValue(valDefault );
 
 			lengthTol.setValue(100);
-			
-		
 		}
 		
 		return cVal;
 	}
 	
-	public IFieldWidget getAlphaVal() {
+	public IFieldWidget getAl() {
 		if(!alpVal.isOn()){
 			double valDefault = 90.0;
 			alpVal.setValue(valDefault);
@@ -342,7 +339,7 @@ public class UnitCellConfigComp extends Composite {
 		return alpVal;
 	}
 	
-	public IFieldWidget getBetaVal() {
+	public IFieldWidget getBe() {
 		if(!betaVal.isOn()){
 			double valDefault = 90.0;
 			betaVal.setValue(valDefault);
@@ -352,7 +349,7 @@ public class UnitCellConfigComp extends Composite {
 		return betaVal;
 	}
 	
-	public IFieldWidget getGammaVal() {
+	public IFieldWidget getGa() {
 		if(!gamVal.isOn()){
 			double valDefault = 90.0;
 			gamVal.setValue(valDefault);
@@ -361,11 +358,6 @@ public class UnitCellConfigComp extends Composite {
 		return gamVal;
 	}
 
-	
-	//Search configuration
-	/**
-	 * @return all elements search on
-	 */
 	public IFieldWidget getElements() {
 		if(!elements.isOn()){
 			elements.setValue("");

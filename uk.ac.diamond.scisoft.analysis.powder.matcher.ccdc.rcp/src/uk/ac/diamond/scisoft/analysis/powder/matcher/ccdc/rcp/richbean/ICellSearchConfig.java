@@ -32,40 +32,6 @@ public interface ICellSearchConfig {
 	public double getAbsoluteAngleTol();	
 	public void setPercentageLengthTol(double lengthTol);
 	public double getPercentageLengthTol();
-	
-	//Crystal parameters
-	//Remvoing the dependence of indexer cellParameter and moving to norphos crystal
-	//public CellParameter getUnitcell();
-	//public void setUnitcell(CellParameter unitcell);
-	
-	//TODO: or should you be only allowed to get one of the following??
-	public void setSearchCrysal(Crystal crystal);
-	public Crystal getSearchCrystal();
-	
-	public void setSearchLattice(Lattice latt);
-	public Lattice getLattice();
 
-	public void setUnitCell(UnitCell unitcell);
-	public UnitCell getUnitCell();
-	
-	//Should not be setting these just make interface extend cell param or well IPowderCell...
-	public void setAVal(double a);
-	public double getAVal();
-	
-	public void setBVal(double b);
-	public double getBVal();
-	
-	public void setCVal(double c);
-	public double getCVal();
-	
-	public double getAlphaVal();
-	public void setAlphaVal(double alpha);
-	
-	public double getBetaVal();
-	public void setBetaVal(double beta);
-
-	public double getGammaVal();
-	public void setGammaVal(double gamma) ;
-	
-
+	public void setA(double a);
 }

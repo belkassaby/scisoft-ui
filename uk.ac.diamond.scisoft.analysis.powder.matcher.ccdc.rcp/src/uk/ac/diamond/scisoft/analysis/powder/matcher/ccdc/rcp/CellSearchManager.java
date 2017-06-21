@@ -10,6 +10,7 @@ import uk.ac.diamond.scisoft.analysis.powder.indexer.indexers.CellParameter;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.CCDCService;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.listeners.ICellSearchListener;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.listeners.CellSearchConfigEvent;
+import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.CellSearchConfig;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.ICellSearchConfig;
 
 import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Crystal;
@@ -19,13 +20,11 @@ import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.Crystal;
  * 
  * There is a searching section too. 
  * 
- * Events:
- * 	- Cell Config Updates
- * 	- 
- *
- * Jobs spwan inside the views
  * 
  * TODO: what to do if the python setup breaks mid run
+ * 
+ * TODO: decide on CellParameter
+ * 
  * @author Dean P. Ottewell
  */
 public class CellSearchManager {
@@ -41,9 +40,6 @@ public class CellSearchManager {
 	List<CellParameter> searchResults; 
 	
 	public CellSearchManager(){
-		
-		//TODO: first handle a bad server
-		//initialiseSearcher();
 		listeners = new HashSet<ICellSearchListener>();
 	}
 	
@@ -51,11 +47,12 @@ public class CellSearchManager {
 	public void initialiseSearcher(){
 		searcher = new CCDCService();
 		
-		
-		searcher.setUpServer();
-		
-		
-		
+		try {
+			searcher.setUpServer();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		if(searcher.serverAvaliable()){
 			//Successfully available
@@ -81,13 +78,13 @@ public class CellSearchManager {
 		}
 	}
 	
-	public void loadSearchMatches(List<ICellSearchConfig> matches){
+	public void loadSearchMatches(List<CellSearchConfig> matches){
 		for(ICellSearchListener listener : listeners) {
 			listener.loadSearchMatches(matches);
 		}
 	}
 	
-	public void loadSearchConfig(ICellSearchConfig searchConfig){
+	public void loadSearchConfig(CellSearchConfig searchConfig){
 		everythingChangesListeners(new CellSearchConfigEvent(this, searchConfig));
 	}
 	

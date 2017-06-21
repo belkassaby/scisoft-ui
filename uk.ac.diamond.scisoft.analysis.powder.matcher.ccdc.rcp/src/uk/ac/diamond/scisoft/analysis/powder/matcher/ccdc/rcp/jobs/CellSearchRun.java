@@ -13,12 +13,11 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.CCDCService;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.CellSearchManager;
-import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.ICellSearchConfig;
 import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.richbean.CellSearchConfig;
 
 
 /**
- * Searches over CCDC and populates controller with results
+ * Searches over CCDC and populates controller with results/
  * 
  * @author Dean P. Ottewell
  */
@@ -27,27 +26,42 @@ public class CellSearchRun implements IRunnableWithProgress {
 	protected final Logger logger = LoggerFactory.getLogger(CellSearchRun.class);
 
 	CellSearchManager manager;
-	ICellSearchConfig searchConfig;
+	CellSearchConfig searchConfig;
 	
-	public CellSearchRun(CellSearchManager manager, ICellSearchConfig searchConfig) {
+	public CellSearchRun(CellSearchManager manager, CellSearchConfig searchConfig) {
 		this.manager = manager;
 		this.searchConfig = searchConfig;
+
 	}
 
 	@Override
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException{
 
+		
+//		try {
+//			throw new Exception("Could not create python interpreter");
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			throw new InterruptedException("Could not create python interpreter");
+//		} //TODO: just throw this error inside the searcher 
+//			
+//			
 		monitor.beginTask("Connecting to ccdc serivce", IProgressMonitor.UNKNOWN);
 		CCDCService searchService = new CCDCService();
 		
 		monitor.beginTask("Setting up ccdc serivce", IProgressMonitor.UNKNOWN);
-		searchService.setUpServer();
+		try {
+			searchService.setUpServer();
+		} catch (Exception e) {
+			throw new InterruptedException(e.getMessage());
+		}
 		
 		if(searchService.serverAvaliable()){
 			monitor.beginTask("Establishing connection to CCDC service", IProgressMonitor.UNKNOWN);
 		} else {
 			monitor.subTask("Could not establish connection to CCDC service");
 			monitor.setCanceled(true);
+			//throw new InterruptedException("Could not establish a connection to CCDC service. "); grab the message from the searchservice right?
 		}
 		
 		monitor.beginTask("Running cell search procedure...", IProgressMonitor.UNKNOWN);
@@ -57,13 +71,13 @@ public class CellSearchRun implements IRunnableWithProgress {
 		if(monitor.isCanceled())
 			monitor.done();
 		
-		if(this.searchConfig.getUnitCell() != null){
-			monitor.subTask("Setting Search lattice");
-			monitor.subTask("Setting Search lattices: " + searchConfig.getSearchCrystal().toString());
-		//	searchService.setLattice(this.searchConfig.getSearchCrystal());
-			//monitor.subTask("Unable to set lattice");
-			//monitor.setCanceled(true);
-		}
+//		if(this.searchConfig.get != null){
+//			monitor.subTask("Setting Search lattice");
+//			monitor.subTask("Setting Search lattices: " + searchConfig.getSearchCrystal().toString());
+//		//	searchService.setLattice(this.searchConfig.getSearchCrystal());
+//			//monitor.subTask("Unable to set lattice");
+//			//monitor.setCanceled(true);
+//		}
 		
 		if(this.searchConfig.getAbsoluteAngleTol() > 0 || this.searchConfig.getPercentageLengthTol() > 0){
 			monitor.subTask("Setting Search Tolerance");
@@ -79,7 +93,7 @@ public class CellSearchRun implements IRunnableWithProgress {
 		
 		//TODO: Thread spawn below to be able to cancel the activity as this can then run indefinitely 
 		
-		searchService.runIndependentCellSearch(searchConfig.getAVal(),searchConfig.getBVal(),searchConfig.getCVal(),searchConfig.getAlphaVal(),searchConfig.getBetaVal(),searchConfig.getGammaVal());
+		searchService.runIndependentCellSearch(searchConfig.getA(),searchConfig.getB(),searchConfig.getC(),searchConfig.getAl(),searchConfig.getBe(),searchConfig.getGa());
 		//searchService.runCrystalSearch();
 		
 		//TODO: set reset parameters inside searchConfig
@@ -93,12 +107,13 @@ public class CellSearchRun implements IRunnableWithProgress {
 		//		}
 		
 		//Filtering on configuration
+		//TODO: call all filters that should be additionally applied
+		
 		
 		// Check if indexer process is still active
 		monitor.beginTask("Gathering search matches...", IProgressMonitor.UNKNOWN);
 		Object matches = searchService.gatherMatches();
 		//TODO:Check empty matches
-
 		
 		try {
 			Object[] matchCast = (Object[]) matches;
@@ -112,6 +127,9 @@ public class CellSearchRun implements IRunnableWithProgress {
 			System.out.println(ex);
 		}
 		
+		
+		
+		
 		//TMP: just needed to cast into usable items to display
 		//TODO: add proper cast system
 		try {
@@ -121,16 +139,21 @@ public class CellSearchRun implements IRunnableWithProgress {
 			List<String[]> searchMatches = Arrays.asList(matchCast);
 			monitor.subTask("Configureing " + searchMatches.size() + " matches ");
 			
-			List<ICellSearchConfig> matchResults = new ArrayList<ICellSearchConfig>();
+			List<CellSearchConfig> matchResults = new ArrayList<CellSearchConfig>();
 			for (String[] match : searchMatches){
-				CellSearchConfig cellConfigation = new CellSearchConfig();
+				
+				double a = Double.parseDouble(match[1]);
+				double b = Double.parseDouble(match[2]);
+				double c = Double.parseDouble(match[3]);
+				double al = Double.parseDouble(match[4]);
+				double be = Double.parseDouble(match[5]);
+				double ga = Double.parseDouble(match[6]);
+				
+				CellSearchConfig cellConfigation = new CellSearchConfig(a,b,c,al,be,ga);
+				
 				cellConfigation.setRefcode(match[0]);
-				cellConfigation.setAVal(Double.parseDouble(match[1]));
-				cellConfigation.setBVal(Double.parseDouble(match[2]));
-				cellConfigation.setCVal(Double.parseDouble(match[3]));
-				cellConfigation.setAlphaVal(Double.parseDouble(match[4]));
-				cellConfigation.setBetaVal(Double.parseDouble(match[5]));
-				cellConfigation.setGammaVal(Double.parseDouble(match[6]));
+				
+				
 				cellConfigation.setFormula(match[7]);
 				matchResults.add(cellConfigation);
 				if(monitor.isCanceled())
@@ -154,6 +177,8 @@ public class CellSearchRun implements IRunnableWithProgress {
 		}
 		
 		//TODO: set searchhits
+		
+		
 		//if (!manager.searchhits.isEmpty())
 		monitor.subTask("Search successful. Best of luck!");
 		
