@@ -309,7 +309,7 @@ public class CellSearchWidget {
 			
 		} catch (InterruptedException e1) {
 			logger.error("Unconfigured Cell Searcher Job:" + e1.getMessage());
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Cell Searcher Confiugation", "An problem in cell searcher confgiuration has preventing the searcher from running" + System.lineSeparator() +
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Cell Searcher Configuration", "An problem in cell searcher configuration has preventing the searcher from running" + System.lineSeparator() +
 					 "Problem Area:" + e1.getMessage());
 			
 		} 
