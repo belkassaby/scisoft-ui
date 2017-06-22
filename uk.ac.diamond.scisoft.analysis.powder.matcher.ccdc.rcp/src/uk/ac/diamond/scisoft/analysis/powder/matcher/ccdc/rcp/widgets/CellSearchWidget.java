@@ -172,6 +172,7 @@ public class CellSearchWidget {
 					public boolean performFinish() {
 						CellSearchConfigWizard configPage = (CellSearchConfigWizard) this.getStartingPage();
 						CellSearchConfig configBean = configPage.gatherConfiguration();
+						sConfig = configBean;
 						//Alert of the new search configuration parameter
 						manager.loadSearchConfig(configBean);
 						

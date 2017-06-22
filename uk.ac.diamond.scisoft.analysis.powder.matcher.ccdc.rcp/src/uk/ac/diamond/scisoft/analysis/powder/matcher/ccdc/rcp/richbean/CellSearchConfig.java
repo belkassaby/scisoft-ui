@@ -143,32 +143,26 @@ public class CellSearchConfig extends Lattice implements ICellSearchConfig, Seri
 		return lengthTol;
 	}
 	
-	double a;
 	public void setA(double a) {
 		this.a = a;
 	}
 	
-	double b;
 	public void setB(double b) {
 		this.b = b;
 	}
 
-	double c;
 	public void setC(double c) {
 		this.c = c;
 	}
 	
-	double al;
 	public void setAl(double al) {
 		this.al = al;
 	}
 
-	double be;
 	public void setBe(double be) {
 		this.be = be;
 	}
 
-	double ga;
 	public void setGa(double ga) {
 		this.ga = ga;
 	}
