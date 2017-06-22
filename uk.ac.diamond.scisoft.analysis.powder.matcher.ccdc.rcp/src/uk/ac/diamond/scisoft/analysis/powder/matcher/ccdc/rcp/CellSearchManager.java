@@ -54,7 +54,7 @@ public class CellSearchManager {
 			e.printStackTrace();
 		}
 		
-		if(searcher.serverAvaliable()){
+		if(searcher.serverAvailable()){
 			//Successfully available
 			
 		} else {

@@ -304,7 +304,7 @@ public class CellSearchWidget {
 			//TODO: grab results on finish
 		} catch (InvocationTargetException e1) {	
 			logger.error(e1.getMessage());
-			MessageDialog.openError(Display.getCurrent().getActiveShell(), "Cell Search Error", "An error occured during a search run!" + System.lineSeparator() +
+			MessageDialog.openError(Display.getCurrent().getActiveShell(), "Cell Search Error", "An error occurred during a search run!" + System.lineSeparator() +
 					 "Specific error :" + e1.getMessage());
 			
 		} catch (InterruptedException e1) {
