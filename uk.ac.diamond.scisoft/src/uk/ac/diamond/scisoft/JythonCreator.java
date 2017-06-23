@@ -353,6 +353,14 @@ public class JythonCreator implements IStartup {
 				envVariables.add(ev);
 			}
 
+			// pass on HDF5 plugin path
+			final String HDF5_PLUGIN_PATH = "HDF5_PLUGIN_PATH";
+			String hdf5PluginPath = System.getenv(HDF5_PLUGIN_PATH);
+			if (hdf5PluginPath != null) {
+				logger.debug("Found {}: {}", HDF5_PLUGIN_PATH, hdf5PluginPath);
+				envVariables.add(HDF5_PLUGIN_PATH + "=" + hdf5PluginPath);
+			}
+
 			info.setEnvVariables(envVariables.toArray(new String[envVariables.size()]));
 
 			// java, java.lang, etc should be found now
