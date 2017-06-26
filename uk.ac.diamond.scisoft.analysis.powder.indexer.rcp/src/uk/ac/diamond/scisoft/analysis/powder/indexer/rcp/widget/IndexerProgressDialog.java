@@ -56,7 +56,7 @@ class IndexerProgressDialog extends ProgressMonitorDialog {
 
 	@Override
 	protected Control createContents(Composite parent) {
-		this.getShell().setText("Indexing Unit Cell");
+		this.getShell().setText("Determing Structure");
 		this.getShell().setImage(Activator.getImage("icons/powderIndexing.png"));
 
 		super.createContents(parent);
