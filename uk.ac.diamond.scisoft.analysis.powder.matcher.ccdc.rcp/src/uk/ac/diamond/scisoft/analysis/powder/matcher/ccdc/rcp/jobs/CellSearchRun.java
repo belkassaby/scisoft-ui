@@ -73,9 +73,9 @@ public class CellSearchRun implements IRunnableWithProgress {
 		monitor.beginTask("Configuring searcher procedure...", IProgressMonitor.UNKNOWN);
 		
 		if(monitor.isCanceled())
-			monitor.done();
-		
+			
 //		if(this.searchConfig.get != null){
+			monitor.done();
 //			monitor.subTask("Setting Search lattice");
 //			monitor.subTask("Setting Search lattices: " + searchConfig.getSearchCrystal().toString());
 //		//	searchService.setLattice(this.searchConfig.getSearchCrystal());

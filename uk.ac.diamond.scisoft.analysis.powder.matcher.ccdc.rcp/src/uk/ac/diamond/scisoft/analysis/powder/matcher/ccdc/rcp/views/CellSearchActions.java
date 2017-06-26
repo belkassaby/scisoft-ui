@@ -11,7 +11,8 @@ import uk.ac.diamond.scisoft.analysis.powder.matcher.ccdc.rcp.CellSearchManager;
  * 
  * Gives ability to search based off a config page and save out as .cif
  * 
- * TODO: do not really like these action bars. 
+ * TODO: did not really see the use of any action bars in this setup. Avaliable for implementaiton
+ * if one is reccomended
  * @author Dean P. Ottewell
  */
 public class CellSearchActions {

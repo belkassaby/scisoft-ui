@@ -16,9 +16,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * Composite setup for cell conifg
+ * Composite setup for cell config
  * 	TODO: check the invalid entries for parameters such as element limit choice and ccdcNum limit size
- *  TODO: what default paramters sould be set?
+ *  TODO: what default parameters should be set?
  *   
  * @author Dean P. Ottewell
  */
@@ -296,7 +296,6 @@ public class UnitCellConfigComp extends Composite {
 	}
 	
 	//Cell Configuration
-	
 	public IFieldWidget getA() {
 		//TODO: the method to only get values if they are actively checked
 		//Really just want to return do not change

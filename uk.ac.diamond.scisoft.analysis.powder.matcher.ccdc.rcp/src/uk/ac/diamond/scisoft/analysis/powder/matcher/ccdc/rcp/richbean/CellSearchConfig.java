@@ -11,6 +11,7 @@ import java.io.Serializable;
  * 
  * TODO: use a CellConfig to search with and also to display
  * TODO: use these store the results also?
+ * TODO: review json format
  * 
  * @author Dean P. Ottewell
  */
@@ -167,10 +168,6 @@ public class CellSearchConfig extends Lattice implements ICellSearchConfig, Seri
 		this.ga = ga;
 	}
 	
-	
-	
-	
-	//TODO: better json format
 	@Override
 	public String toString(){
 		String format = "";

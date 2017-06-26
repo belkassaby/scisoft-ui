@@ -39,10 +39,6 @@ public class CellSearchConfigWizard extends WizardPage {
 		this.configBean = configBean;
 		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-//        Composite composite = new Composite(parent, SWT.NULL);
-//        //composite.setLayout(new GridLayout(1,true));
-//    	composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        
 		this.setControl(parent);
 	}
 	
@@ -60,22 +56,6 @@ public class CellSearchConfigWizard extends WizardPage {
 		//TODO: function which could throw a exception
 		manager = BeanService.getInstance().createController(cellView, configBean);
 		
-		//Only do on finish now
-//		try {
-//			//Tmp: below just for defbugging
-//			final Label value = new Label(dialogContainer, SWT.LEFT);
-//			value.setText("TestLoGArea");
-//			controller.addValueListener(new ExamplePrintBeanValueListener(controller, value));
-//			
-//			controller.beanToUI();
-//			controller.switchState(true);
-//			
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-//		/parent.pack();
 	}
 	
 
