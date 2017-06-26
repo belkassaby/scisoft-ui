@@ -96,12 +96,12 @@ public class CellSearchRun implements IRunnableWithProgress {
 		monitor.beginTask("Running search procedure...", IProgressMonitor.UNKNOWN);
 		
 		//TODO: Thread spawn below to be able to cancel the activity as this can then run indefinitely 
-		try {
-			matches = searchService.performSearchMatches(searchConfig.getA(),searchConfig.getB(),searchConfig.getC(),searchConfig.getAl(),searchConfig.getBe(),searchConfig.getGa());
-		} catch (AnalysisRpcException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			matches = searchService.performSearchMatches(searchConfig.getA(),searchConfig.getB(),searchConfig.getC(),searchConfig.getAl(),searchConfig.getBe(),searchConfig.getGa());
+//		} catch (AnalysisRpcException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		searchService.runIndependentCellSearch(searchConfig.getA(),searchConfig.getB(),searchConfig.getC(),searchConfig.getAl(),searchConfig.getBe(),searchConfig.getGa());
 		//searchService.runCrystalSearch();
