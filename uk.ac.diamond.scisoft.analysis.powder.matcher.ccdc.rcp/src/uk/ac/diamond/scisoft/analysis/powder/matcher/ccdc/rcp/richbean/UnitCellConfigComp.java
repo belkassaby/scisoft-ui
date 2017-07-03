@@ -16,9 +16,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * Composite setup for cell conifg
+ * Composite setup for cell config
  * 	TODO: check the invalid entries for parameters such as element limit choice and ccdcNum limit size
- *  TODO: what default paramters sould be set?
+ *  TODO: what default parameters should be set?
  *   
  * @author Dean P. Ottewell
  */
@@ -62,14 +62,17 @@ public class UnitCellConfigComp extends Composite {
     	Composite comp = new Composite(cellValue, SWT.NONE);
     	comp.setLayout(new GridLayout(2, false));
 		
-		Text aValTxt = new Text(comp, SWT.NONE);
+		Text aValTxt = new Text(comp, SWT.BORDER);
 		aValTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		
 		final BoundsDecorator abounds = new FloatDecorator(aValTxt);
 		abounds.setMinimum(0);
 		abounds.setMaximum(100);
+		
     	this.aVal = new TextFieldDecorator(aValTxt, abounds);
-		controlUseGenerator(comp, aVal,true);
-
+    	
+    	controlUseGenerator(comp, aVal,true);
+		
 		
 		label = new Label(cellValue, SWT.NONE);
 		label.setText("b" + " / " + "\u212B");
@@ -78,7 +81,7 @@ public class UnitCellConfigComp extends Composite {
     	comp.setLayout(new GridLayout(2, false));
 		
 		
-		Text bValTxt = new Text(comp, SWT.NONE);
+		Text bValTxt = new Text(comp, SWT.BORDER);
 		bValTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		final BoundsDecorator bbounds = new FloatDecorator(bValTxt);
 		bbounds.setMinimum(0);
@@ -94,7 +97,7 @@ public class UnitCellConfigComp extends Composite {
     	comp.setLayout(new GridLayout(2, false));
 		
 		
-		Text cValTxt = new Text(comp, SWT.NONE);
+		Text cValTxt = new Text(comp, SWT.BORDER);
 		cValTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		final BoundsDecorator cbounds = new FloatDecorator(cValTxt);
 		cbounds.setMinimum(0);
@@ -111,7 +114,7 @@ public class UnitCellConfigComp extends Composite {
 		comp = new Composite(cellValue, SWT.NONE);
     	comp.setLayout(new GridLayout(2, false));
 		
-		Text alpValTxt = new Text(comp, SWT.NONE);
+		Text alpValTxt = new Text(comp,SWT.BORDER);
 		alpValTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		final FloatDecorator alpbounds = new FloatDecorator(alpValTxt);
 		cbounds.setMinimum(0);
@@ -128,7 +131,7 @@ public class UnitCellConfigComp extends Composite {
     	comp.setLayout(new GridLayout(2, false));
 		
 		
-		Text betaValTxt = new Text(comp, SWT.NONE);
+		Text betaValTxt = new Text(comp, SWT.BORDER);
 		betaValTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		final FloatDecorator betabounds = new FloatDecorator(betaValTxt);
 		cbounds.setMinimum(0);
@@ -145,7 +148,7 @@ public class UnitCellConfigComp extends Composite {
     	comp.setLayout(new GridLayout(2, false));
 		
 		
-		Text gamValTxt = new Text(comp, SWT.NONE);
+		Text gamValTxt = new Text(comp, SWT.BORDER);
 		gamValTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		final FloatDecorator gammabounds = new FloatDecorator(gamValTxt);
 		cbounds.setMinimum(0);
@@ -164,7 +167,7 @@ public class UnitCellConfigComp extends Composite {
 		comp = new Composite(this, SWT.NONE);
 		comp.setLayout(new GridLayout(2, false));
 		
-		Text angleTolTxt = new Text(comp, SWT.NONE);
+		Text angleTolTxt = new Text(comp, SWT.BORDER);
 		angleTolTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		final FloatDecorator angleTolBounds = new FloatDecorator(angleTolTxt);
 		angleTolBounds.setMinimum(0);
@@ -179,7 +182,7 @@ public class UnitCellConfigComp extends Composite {
 		comp = new Composite(this, SWT.NONE);
 		comp.setLayout(new GridLayout(2, false));
 		
-		Text lengthTolTxt = new Text(comp, SWT.NONE);
+		Text lengthTolTxt = new Text(comp, SWT.BORDER);
 		lengthTolTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		final FloatDecorator lengthTolBounds = new FloatDecorator(lengthTolTxt);
 		lengthTolBounds.setMinimum(0);
@@ -195,7 +198,7 @@ public class UnitCellConfigComp extends Composite {
 		comp = new Composite(this, SWT.NONE);
 		comp.setLayout(new GridLayout(2, false));
 		
-		this.elements =  new TextWrapper(comp, SWT.NONE);//TextFieldDecorator(elementsTxt, textBounds);
+		this.elements =  new TextWrapper(comp, SWT.BORDER);//TextFieldDecorator(elementsTxt, textBounds);
 
 //		String invalidText = " ";
 //		RegexDecorator regexSet = new RegexDecorator(elementsTxt, invalidText);
@@ -210,7 +213,7 @@ public class UnitCellConfigComp extends Composite {
 		comp = new Composite(this, SWT.NONE);
 		comp.setLayout(new GridLayout(2, false));
 		
-		this.spacegroup =  new TextWrapper(comp, SWT.NONE);//new TextFieldDecorator(spacegroupTxt, textBounds);
+		this.spacegroup =  new TextWrapper(comp,SWT.BORDER);//new TextFieldDecorator(spacegroupTxt, textBounds);
 		
 		controlUseGenerator(comp, spacegroup,false);
 		
@@ -220,7 +223,7 @@ public class UnitCellConfigComp extends Composite {
 		comp = new Composite(this, SWT.NONE);
 		comp.setLayout(new GridLayout(2, false));
 		
-		this.refcode =  new TextWrapper(comp, SWT.NONE);//new TextFieldDecorator(refcodeTxt, textBounds);
+		this.refcode =  new TextWrapper(comp, SWT.BORDER);//new TextFieldDecorator(refcodeTxt, textBounds);
 		refcode.setTextLimit(6); //REFCODE is 6 constant letters
 		
 		controlUseGenerator(comp, refcode,false);
@@ -232,7 +235,7 @@ public class UnitCellConfigComp extends Composite {
 		comp.setLayout(new GridLayout(2, false));
 		
 		
-		this.ccdcNum =  new TextWrapper(comp, SWT.NONE);//new TextFieldDecorator(ccdcNumTxt, textBounds);
+		this.ccdcNum =  new TextWrapper(comp, SWT.BORDER);//new TextFieldDecorator(ccdcNumTxt, textBounds);
 		controlUseGenerator(comp, ccdcNum,false);
 		
 		
@@ -241,7 +244,7 @@ public class UnitCellConfigComp extends Composite {
 		comp = new Composite(this, SWT.NONE);
 		comp.setLayout(new GridLayout(2, false));
 
-		this.formula =  new TextWrapper(comp, SWT.NONE);//new TextFieldDecorator(formulaTxt, textBounds);
+		this.formula =  new TextWrapper(comp, SWT.BORDER);//new TextFieldDecorator(formulaTxt, textBounds);
 		
 		controlUseGenerator(comp, formula,false);
 		
@@ -251,7 +254,7 @@ public class UnitCellConfigComp extends Composite {
 		comp = new Composite(this, SWT.NONE);
 		comp.setLayout(new GridLayout(2, false));
 		
-		this.associateName =  new TextWrapper(comp, SWT.NONE);//new TextFieldDecorator(associateNameTxt , textBounds);
+		this.associateName =  new TextWrapper(comp,SWT.BORDER);//new TextFieldDecorator(associateNameTxt , textBounds);
 		
 		controlUseGenerator(comp, associateName,false);
 	}
@@ -293,7 +296,6 @@ public class UnitCellConfigComp extends Composite {
 	}
 	
 	//Cell Configuration
-	
 	public IFieldWidget getA() {
 		//TODO: the method to only get values if they are actively checked
 		//Really just want to return do not change

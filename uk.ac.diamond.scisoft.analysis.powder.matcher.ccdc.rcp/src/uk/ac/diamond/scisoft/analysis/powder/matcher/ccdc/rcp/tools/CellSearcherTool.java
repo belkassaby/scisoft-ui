@@ -45,8 +45,8 @@ public class CellSearcherTool extends AbstractToolPage  {
 
 	@Override
 	public void createControl(Composite parent) {
-		//TODO:Centerered blanket text arguing Unfortuantely Cell Searcher Service is not configured.
-		//Have some log... can narrow down where in the service is erroring? maybe even grey out until the ccdc is avalaible to generate as a tool optiton...
+		//TODO:Centerered blanket text arguing Unfortunately Cell Searcher Service is not configured.
+		//Have some log... can narrow down where in the service is erroring? maybe even grey out until the ccdc is available to generate as a tool option...
 		//Based on exceptions thrown in CCDCservice. iff problems exist
 		
 		this.composite = new Composite(parent, SWT.NONE);

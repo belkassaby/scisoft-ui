@@ -15,7 +15,7 @@ import uk.ac.diamond.scisoft.analysis.powder.indexer.crystal.UnitCell;;
  */
 public interface ICellSearchConfig {
 	
-	//CCDC filters and search configurators
+	//CCDC filters and search config
 	public String getElements();
 	public void setElements(String elements);
 	public String getSpacegroup();
@@ -33,5 +33,4 @@ public interface ICellSearchConfig {
 	public void setPercentageLengthTol(double lengthTol);
 	public double getPercentageLengthTol();
 
-	public void setA(double a);
 }

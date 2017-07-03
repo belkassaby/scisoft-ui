@@ -4,7 +4,7 @@ import org.eclipse.dawnsci.analysis.api.io.ILoaderService;
 import org.eclipse.dawnsci.analysis.api.persistence.IPersistenceService;
 import org.osgi.service.event.EventAdmin;
 
-public class LocalServiceManager {
+public class PowderServiceManager {
 
 	private static ILoaderService lservice;
 	private static EventAdmin eventAdmin;

@@ -37,43 +37,25 @@ public class CellSearchConfigWizard extends WizardPage {
 		this.setTitle("Cell Search Configuration");
 		
 		this.configBean = configBean;
+		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-        Composite composite = new Composite(parent, SWT.NULL);
-        composite.setLayout(new GridLayout(1,true));
-
-		this.setControl(composite);
+		this.setControl(parent);
 	}
 	
 	@Override	
 	public void createControl(Composite parent) {		
 		dialogContainer = new Composite(parent, SWT.NONE);
-		dialogContainer.setLayout(new GridLayout(1, false));
+		dialogContainer.setLayout(new GridLayout(1, true));
 		dialogContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		// Composite
 		cellView = new UnitCellConfigComp(dialogContainer, SWT.NONE);
-		cellView.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));		
+		cellView.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));	
 		
 		// Connect the UI and bean
 		//TODO: function which could throw a exception
 		manager = BeanService.getInstance().createController(cellView, configBean);
 		
-		//Only do on finish now
-//		try {
-//			//Tmp: below just for defbugging
-//			final Label value = new Label(dialogContainer, SWT.LEFT);
-//			value.setText("TestLoGArea");
-//			controller.addValueListener(new ExamplePrintBeanValueListener(controller, value));
-//			
-//			controller.beanToUI();
-//			controller.switchState(true);
-//			
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		parent.pack();
 	}
 	
 

@@ -296,8 +296,10 @@ public class JythonCreator implements IStartup {
 			// now set up the dynamic library environment
 			File libraryDir = new File(pluginsDir.getParent(), "lib");
 			Set<String> paths = new LinkedHashSet<String>();
+			String hdf5Lib = null; // where HDF5 libraries reside
 			if (!isRunningInEclipse && libraryDir.exists()) {
-				paths.add(libraryDir.getAbsolutePath());
+				hdf5Lib = libraryDir.getAbsolutePath();
+				paths.add(hdf5Lib);
 			} else {
 				// check each plugin directory's for dynamic libraries
 				String osarch = Platform.getOS() + "-" + Platform.getOSArch();
@@ -307,8 +309,13 @@ public class JythonCreator implements IStartup {
 					if (d.isDirectory()) {
 						d = new File(d, osarch);
 						if (d.isDirectory()) {
-							if (paths.add(d.getAbsolutePath()))
+							String p = d.getAbsolutePath();
+							if (paths.add(p)) {
 								logger.debug("Adding library path: {}", d);
+								if (hdf5Lib == null && p.contains("hdf.hdf5lib")) {
+									hdf5Lib = p;
+								}
+							}
 						}
 					}
 				}
@@ -351,6 +358,17 @@ public class JythonCreator implements IStartup {
 					ev += e + "|";
 				}
 				envVariables.add(ev);
+			}
+
+			// pass on HDF5 plugin path
+			final String HDF5_PLUGIN_PATH = "HDF5_PLUGIN_PATH";
+			String hdf5PluginPath = System.getenv(HDF5_PLUGIN_PATH);
+			if (hdf5PluginPath == null) {
+				hdf5PluginPath = hdf5Lib;
+			}
+			if (hdf5PluginPath != null) {
+				logger.debug("Found {}: {}", HDF5_PLUGIN_PATH, hdf5PluginPath);
+				envVariables.add(HDF5_PLUGIN_PATH + "=" + hdf5PluginPath);
 			}
 
 			info.setEnvVariables(envVariables.toArray(new String[envVariables.size()]));

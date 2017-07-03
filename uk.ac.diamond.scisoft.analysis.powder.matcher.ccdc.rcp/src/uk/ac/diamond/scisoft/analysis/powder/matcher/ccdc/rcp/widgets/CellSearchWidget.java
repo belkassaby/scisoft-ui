@@ -172,6 +172,7 @@ public class CellSearchWidget {
 					public boolean performFinish() {
 						CellSearchConfigWizard configPage = (CellSearchConfigWizard) this.getStartingPage();
 						CellSearchConfig configBean = configPage.gatherConfiguration();
+						sConfig = configBean;
 						//Alert of the new search configuration parameter
 						manager.loadSearchConfig(configBean);
 						
@@ -303,12 +304,12 @@ public class CellSearchWidget {
 			//TODO: grab results on finish
 		} catch (InvocationTargetException e1) {	
 			logger.error(e1.getMessage());
-			MessageDialog.openError(Display.getCurrent().getActiveShell(), "Cell Search Error", "An error occured during a search run!" + System.lineSeparator() +
+			MessageDialog.openError(Display.getCurrent().getActiveShell(), "Cell Search Error", "An error occurred during a search run!" + System.lineSeparator() +
 					 "Specific error :" + e1.getMessage());
 			
 		} catch (InterruptedException e1) {
 			logger.error("Unconfigured Cell Searcher Job:" + e1.getMessage());
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Cell Searcher Confiugation", "An problem in cell searcher confgiuration has preventing the searcher from running" + System.lineSeparator() +
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Cell Searcher Configuration", "An problem in cell searcher configuration has preventing the searcher from running" + System.lineSeparator() +
 					 "Problem Area:" + e1.getMessage());
 			
 		} 

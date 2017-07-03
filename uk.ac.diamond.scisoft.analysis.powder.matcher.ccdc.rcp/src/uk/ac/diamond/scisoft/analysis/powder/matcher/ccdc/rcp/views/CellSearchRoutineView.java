@@ -31,7 +31,7 @@ public class CellSearchRoutineView extends ViewPart {
 	public void createPartControl(final Composite parent) {
 		manager = new CellSearchManager(); 
 		
-		//TODO:Centerered blanket text arguing Unfortuantely Cell Searcher Service is not configured.
+		//TODO:Centerered blanket text arguing Unfortunately Cell Searcher Service is not configured.
 		//Have some log... can narrow down where in the service is erroring?
 		//Based on exceptions thrown in CCDCservice. iff problems exist 
 		
