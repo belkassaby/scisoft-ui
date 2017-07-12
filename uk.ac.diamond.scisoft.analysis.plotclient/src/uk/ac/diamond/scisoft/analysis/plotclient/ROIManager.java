@@ -167,16 +167,17 @@ public class ROIManager implements IROIListener, IRegionListener {
 
 	private void removeROI(IROI or) {
 //		roiMap.remove(or.getName());
+		Class<? extends IROI> clazz = or == null ? null : or.getClass();
 		if (roi != null) {
-			if (!or.getClass().equals(roi.getClass())) {
+			if (!roi.getClass().equals(clazz)) {
 				// switch current roi (and list), then delete
-				updateGuiBean(or.getClass(), or, false);
+				updateGuiBean(clazz, or, false);
 				try {
 					Thread.sleep(CLIENT_WAIT_PERIOD); // allow time for clients to update
 				} catch (InterruptedException e) {
 				}
 				updateROIMap();
-				updateGuiBean(or.getClass(), null, false);
+				updateGuiBean(clazz, null, false);
 				try {
 					Thread.sleep(CLIENT_WAIT_PERIOD); // allow time for clients to update
 				} catch (InterruptedException e) {
@@ -185,13 +186,13 @@ public class ROIManager implements IROIListener, IRegionListener {
 				updateROIMap();
 			}
 
-			if (or.equals(roi.getName())) { // replace current ROI
+			if (or != null && or.equals(roi.getName())) { // replace current ROI
 				roi = getFromROIMap(roi.getClass());
 			}
 			roi = updateGuiBean(roi.getClass(), roi, false);
 		} else {
 			updateROIMap();
-			roi = updateGuiBean(or.getClass(), or, false);
+			roi = updateGuiBean(clazz, or, false);
 		}
 	}
 
