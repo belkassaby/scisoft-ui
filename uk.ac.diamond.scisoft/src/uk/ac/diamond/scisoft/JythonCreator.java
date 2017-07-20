@@ -275,10 +275,10 @@ public class JythonCreator implements IStartup {
 			// required to expose IRemotePlottingSystem to the scripting layer.
 			createSwtEntries(extraPlugins);
 
-			//Get Jython paths for DAWN libs
-			pyPaths.addAll(JythonPath.assembleJyPaths(pluginsDir, extraPlugins, isRunningInEclipse));
-			//Also need allPluginsDirs for later parts
+			// Also need allPluginsDirs for later parts
 			final List<File> allPluginDirs = JythonPath.findDirs(pluginsDir, extraPlugins, isRunningInEclipse);
+			// Get Jython paths for DAWN libs
+			pyPaths.addAll(JythonPath.assembleJyPaths(pluginsDir, allPluginDirs, extraPlugins, isRunningInEclipse));
 
 			Set<String> removals = new HashSet<String>();
 			for (String s : info.libs) {
