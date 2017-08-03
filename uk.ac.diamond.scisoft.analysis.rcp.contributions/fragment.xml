@@ -664,6 +664,14 @@
          </contentTypeBinding>
       </editor>
       <editor
+            class="uk.ac.diamond.scisoft.analysis.rcp.editors.HDF5TreeEditor"
+            default="false"
+            extensions="h5, hd5, hdf5, nxs, nexus, hdf, mat, nc"
+            icon="icons/hdf.gif"
+            id="uk.ac.diamond.scisoft.analysis.rcp.editors.hdf5"
+            name="Nexus/HDF5 Editor">
+      </editor>
+      <editor
             default="false"
             class="uk.ac.diamond.scisoft.analysis.rcp.editors.CompareFilesEditor"
             id="uk.ac.diamond.scisoft.analysis.rcp.editors.CompareFilesEditor"
