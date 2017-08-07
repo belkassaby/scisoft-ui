@@ -195,7 +195,12 @@ public class BeanScriptingManagerImpl implements IBeanScriptingManager, IObserve
 				DataBean dataBean = getPlotServer().getData(viewName);
 				if (dataBean != null) {
 					dataBean = dataBean.copy(); // need to make a (shallow) copy otherwise changes get out of sync
-					logger.trace("BSM copied data bean ({}) {}", dataBean.getData().size(), dataBean);
+					if (logger.isTraceEnabled()) {
+						// don't pass databean itself to logger to prevent slow loggers holding references to it
+						// for longer than necessary
+						String beanString = dataBean.toString();
+						logger.trace("BSM copied data bean ({}) {}", dataBean.getData().size(), beanString);
+					}
 				}
 				evt.setDataBean(dataBean);
 			} catch (Exception e) {
