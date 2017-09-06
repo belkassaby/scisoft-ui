@@ -92,4 +92,11 @@
          </menu>
       </menuContribution>
    </extension>
+   <extension
+         point="org.eclipse.dawnsci.plotting.api.plottingViewer">
+      <plottingViewer
+            class="uk.ac.diamond.scisoft.analysis.rcp.views.DatasetTablePlotViewer"
+            id="uk.ac.diamond.scisoft.analysis.rcp.views.DatasetTablePlotViewer">
+      </plottingViewer>
+   </extension>
 </plugin>
