@@ -5,8 +5,9 @@
       version="1.3.0.qualifier"
       provider-name="Diamond Light Source">
 
-   <description url="http://www.opengda.org/">
-      This feature contains all the analysis functionality including all the ui elements, but none of the eclipse contributions.
+   <description>
+      This feature contains all the analysis functionality including
+all the ui elements, but none of the eclipse contributions.
    </description>
 
    <copyright url="http://www.apache.org/licenses/LICENSE-2.0">
