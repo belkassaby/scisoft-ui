@@ -327,6 +327,7 @@ public class DatasetInspector extends Composite {
 	 */
 	public DatasetInspector(Composite parent, int style, IWorkbenchPartSite site) {
 		super(parent, style);
+		logger.info("Perspective Created: DExplore");
 		setLayout(new FillLayout());
 
 		sliceQueue = new InteractiveQueue(this);
